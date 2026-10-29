@@ -57,7 +57,7 @@ export default function Services() {
       <Banner
         eyebrow="CORE SERVICES"
         title="Our Services"
-        bgImage="/assets/site.jpg"
+        bgImage={`${import.meta.env.BASE_URL}assets/site.jpg`}
       />
 
       {/* 2. Side-by-side core service cards */}
@@ -106,7 +106,7 @@ export default function Services() {
 
             <Reveal delay={0.2} className="col-media">
               <ImageWithFallback
-                src="/assets/site.jpg"
+                src={`${import.meta.env.BASE_URL}assets/site.jpg`}
                 alt="Major construction site managed by Crownstone Advisory"
                 className="rounded-image-card site-card-navy-border"
                 placeholderText="Site Overview"

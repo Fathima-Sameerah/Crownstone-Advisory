@@ -54,7 +54,7 @@ export default function Header() {
           {/* Left: Brand Identity */}
           <Link to="/" className="header-brand" aria-label="Crownstone Advisory Home">
             <img
-              src="/assets/logo.png"
+              src={`${import.meta.env.BASE_URL}assets/logo.png`}
               alt="Crownstone Advisory Crest"
               className="header-logo"
               onError={(e) => {

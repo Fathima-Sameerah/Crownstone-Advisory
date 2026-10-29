@@ -23,7 +23,7 @@ export default function Support() {
       <Banner
         eyebrow="OUR CLIENTS"
         title="Who We Support / Why Choose Us"
-        bgImage="/assets/team.jpg"
+        bgImage={`${import.meta.env.BASE_URL}assets/team.jpg`}
       />
 
       {/* 2. Client Grid: 5 Centred Icon Cards */}
@@ -77,7 +77,7 @@ export default function Support() {
 
             <Reveal delay={0.2} className="col-media">
               <ImageWithFallback
-                src="/assets/hero.jpg"
+                src={`${import.meta.env.BASE_URL}assets/hero.jpg`}
                 alt="Chartered Quantity Surveyor site operation"
                 className="rounded-image-card"
                 placeholderText="Site Operation"

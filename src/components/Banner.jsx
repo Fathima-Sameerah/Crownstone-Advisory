@@ -4,7 +4,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 export default function Banner({
   eyebrow,
   title,
-  bgImage = "/assets/site.jpg"
+  bgImage = `${import.meta.env.BASE_URL}assets/site.jpg`
 }) {
   const shouldReduceMotion = useReducedMotion();
 

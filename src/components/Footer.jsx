@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="footer-col footer-col-brand">
           <div className="footer-brand-header">
             <img
-              src="/assets/logo.png"
+              src={`${import.meta.env.BASE_URL}assets/logo.png`}
               alt="Crownstone Advisory Crest"
               className="footer-logo"
               onError={(e) => {

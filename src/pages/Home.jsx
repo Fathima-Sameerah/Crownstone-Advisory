@@ -33,7 +33,7 @@ export default function Home() {
       <section className="hero-section">
         <div className="hero-bg-wrapper">
           <ImageWithFallback
-            src="/assets/hero.jpg"
+            src={`${import.meta.env.BASE_URL}assets/hero.jpg`}
             alt="Crownstone Advisory - Hard hat, plans and calculator on site"
             className="hero-bg-img"
             overlay={true}
@@ -150,7 +150,7 @@ export default function Home() {
 
             <Reveal delay={0.2} className="col-media">
               <ImageWithFallback
-                src="/assets/about.jpg"
+                src={`${import.meta.env.BASE_URL}assets/about.jpg`}
                 alt="Crownstone Advisory professional team reviewing project specs"
                 className="rounded-image-card"
                 placeholderText="About Image"
@@ -242,7 +242,7 @@ export default function Home() {
 
             <Reveal delay={0.2} className="col-media">
               <ImageWithFallback
-                src="/assets/team.jpg"
+                src={`${import.meta.env.BASE_URL}assets/team.jpg`}
                 alt="Two Crownstone Advisory engineers reviewing construction blueprints"
                 className="rounded-image-card"
                 placeholderText="Team Image"

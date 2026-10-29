@@ -130,7 +130,7 @@ export default function Contact() {
       <Banner
         eyebrow="CONTACT US"
         title="Get in Touch"
-        bgImage="/assets/site.jpg"
+        bgImage={`${import.meta.env.BASE_URL}assets/site.jpg`}
       />
 
       {/* 2. Main Two-Column Contact Section */}
@@ -298,7 +298,7 @@ export default function Contact() {
                   <div className="contact-qr-wrapper">
                     <div className="qr-box">
                       <img
-                        src="/assets/qr.png"
+                        src={`${import.meta.env.BASE_URL}assets/qr.png`}
                         alt="Crownstone Advisory Contact QR Code"
                         className="qr-img"
                         onError={(e) => {

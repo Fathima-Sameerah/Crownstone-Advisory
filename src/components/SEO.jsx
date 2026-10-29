@@ -18,7 +18,7 @@ export default function SEO({
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />
-      <meta property="og:image" content="/assets/logo.png" />
+      <meta property="og:image" content={`${import.meta.env.BASE_URL}assets/logo.png`} />
       {canonical && <link rel="canonical" href={canonical} />}
     </Helmet>
   );

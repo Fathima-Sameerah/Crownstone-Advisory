@@ -39,7 +39,7 @@ export default function About() {
       <Banner
         eyebrow="CROWNSTONE ADVISORY"
         title="About Us"
-        bgImage="/assets/site.jpg"
+        bgImage={`${import.meta.env.BASE_URL}assets/site.jpg`}
       />
 
       {/* 2. Who We Are (Two columns) */}
@@ -62,7 +62,7 @@ export default function About() {
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
                 <ImageWithFallback
-                  src="/assets/serveyor.jpg"
+                  src={`${import.meta.env.BASE_URL}assets/about.jpg`}
                   alt="Crownstone Advisory professional quantity surveying site operations"
                   className="rounded-image-card"
                   placeholderText="Site Operation"
@@ -92,7 +92,7 @@ export default function About() {
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
                 <ImageWithFallback
-                  src="/assets/teams.jpg"
+                  src={`${import.meta.env.BASE_URL}assets/team.jpg`}
                   alt="Engineers reviewing compliance and contract documents"
                   className="rounded-image-card"
                   placeholderText="Team Review"
