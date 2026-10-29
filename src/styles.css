@@ -334,77 +334,98 @@ h1, h2, h3, h4 {
   gap: 14px;
   text-decoration: none;
   min-height: 54px;
-  flex-shrink: 1;
+  flex-shrink: 0;
 }
 
 .header-logo {
-  height: 130px;
+  height: 125px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 }
 
 .header-brand-text {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 
 .brand-title {
   font-family: var(--font-serif);
-  font-size: 22px;
+  font-size: 26px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 2.2px;
   color: var(--color-white);
   text-transform: uppercase;
-  line-height: 1.1;
+  line-height: 1.15;
   white-space: nowrap;
 }
 
 .brand-subtitle {
   font-family: var(--font-sans);
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 500;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
   color: var(--color-gold);
   text-transform: uppercase;
-  margin-top: 3px;
-  line-height: 1.1;
+  margin-top: 4px;
+  line-height: 1.2;
   white-space: pre-line;
+}
+
+/* Medium Desktop / Laptop Nav Balance */
+@media (max-width: 1199px) and (min-width: 900px) {
+  .header-container {
+    padding: 0 32px;
+  }
+  .header-brand {
+    gap: 12px;
+  }
+  .header-logo {
+    height: 105px;
+    margin-bottom: 10px;
+  }
+  .brand-title {
+    font-size: 23px;
+    letter-spacing: 1.8px;
+  }
+  .brand-subtitle {
+    font-size: 10.5px;
+    letter-spacing: 1px;
+  }
 }
 
 /* --- Header Responsive Behavior --- */
 @media (max-width: 899px) {
   .header-container {
-    padding: 0 16px;
+    padding: 0 20px;
     gap: 12px;
+    height: 90px;
   }
   .header-brand {
-    gap: 10px;
+    gap: 12px;
     max-width: calc(100% - 56px);
-    overflow: hidden;
   }
   .header-logo {
     height: 80px;
+    margin-bottom: 6px;
     flex-shrink: 0;
   }
   .header-brand-text {
-    overflow: hidden;
+    overflow: visible;
   }
   .brand-title {
-    font-size: 15px;
-    letter-spacing: 1px;
+    font-size: 21px;
+    letter-spacing: 1.4px;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
   .brand-subtitle {
-    font-size: 8.5px;
-    letter-spacing: 0.3px;
+    font-size: 10px;
+    letter-spacing: 0.8px;
     white-space: pre-line;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 220px;
+    max-width: none;
+    margin-top: 3px;
   }
   .header-actions {
     margin-left: auto;
@@ -416,20 +437,63 @@ h1, h2, h3, h4 {
   }
 }
 
-@media (max-width: 400px) {
-  .header-brand {
+@media (max-width: 599px) {
+  .header-container {
+    padding: 0 16px;
+    height: 80px;
     gap: 8px;
+  }
+  .header-brand {
+    gap: 10px;
     max-width: calc(100% - 52px);
   }
   .header-logo {
-    height: 50px;
+    height: 66px;
+    margin-bottom: 4px;
   }
   .brand-title {
-    font-size: 13.5px;
-    letter-spacing: 0.5px;
+    font-size: 17.5px;
+    letter-spacing: 1px;
+    line-height: 1.15;
+    white-space: nowrap;
   }
   .brand-subtitle {
-    display: block;
+    font-size: 9.5px;
+    letter-spacing: 0.5px;
+    line-height: 1.25;
+    margin-top: 3px;
+    white-space: pre-line;
+    max-width: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .header-container {
+    padding: 0 12px;
+    height: 74px;
+    gap: 6px;
+  }
+  .header-brand {
+    gap: 8px;
+    max-width: calc(100% - 48px);
+  }
+  .header-logo {
+    height: 54px;
+    margin-bottom: 2px;
+  }
+  .brand-title {
+    font-size: 15.5px;
+    letter-spacing: 0.6px;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+  .brand-subtitle {
+    font-size: 8.8px;
+    letter-spacing: 0.35px;
+    line-height: 1.25;
+    margin-top: 2px;
+    white-space: pre-line;
+    max-width: none;
   }
 }
 
@@ -742,8 +806,8 @@ h1, h2, h3, h4 {
   background: linear-gradient(
     90deg,
     rgba(11, 27, 58, 0.95) 0%,
-    rgba(11, 27, 58, 0.85) 50%,
-    rgba(11, 27, 58, 0.45) 100%
+    rgba(11, 27, 58, 0.85) 60%,
+    rgba(11, 27, 58, 0.45) 80%
   );
 }
 
@@ -1089,6 +1153,23 @@ h1, h2, h3, h4 {
   margin-top: auto;
 }
 
+.three-col-grid .service-card-header {
+  margin-bottom: 20px;
+}
+
+.three-col-grid .service-card-title {
+  min-height: 2.6em;
+  margin-bottom: 20px;
+}
+
+.three-col-grid .service-card-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 0;
+}
+
 .service-card-item {
   display: flex;
   align-items: flex-start;
@@ -1298,7 +1379,7 @@ h1, h2, h3, h4 {
   line-height: 1.6;
 }
 
-/* --- Who We Support Client Types Grid (Page 4) --- */
+/* --- Our Clients Grid --- */
 .client-types-grid {
   display: grid;
   grid-template-columns: 1fr;

@@ -140,7 +140,8 @@ export default function Header() {
             >
               <div className="mobile-drawer-header">
                 <div className="header-brand-text">
-                  <span className="brand-title" style={{ fontSize: '18px' }}>{BRAND.name}</span>
+                  <span className="brand-title" style={{ fontSize: '19px' }}>{BRAND.name}</span>
+                  <span className="brand-subtitle" style={{ fontSize: '9.5px', marginTop: '3px' }}>{BRAND.subtitle}</span>
                 </div>
                 <button
                   type="button"

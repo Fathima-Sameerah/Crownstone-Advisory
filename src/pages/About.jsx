@@ -62,7 +62,7 @@ export default function About() {
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
                 <ImageWithFallback
-                  src={`${import.meta.env.BASE_URL}assets/about.jpg`}
+                  src={`${import.meta.env.BASE_URL}assets/eng.jpg`}
                   alt="Crownstone Advisory professional quantity surveying site operations"
                   className="rounded-image-card"
                   placeholderText="Site Operation"

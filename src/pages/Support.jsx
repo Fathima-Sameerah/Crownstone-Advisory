@@ -15,14 +15,14 @@ export default function Support() {
   return (
     <div className="page-wrapper support-page">
       <SEO
-        title="Who We Support / Why Choose Us"
+        title="Our Clients / Why Choose Us"
         description="Crownstone Advisory supports private developers, contractors, consultants, and property owners with high governance standards and commercial clarity."
       />
 
       {/* 1. Banner */}
       <Banner
         eyebrow="OUR CLIENTS"
-        title="Who We Support / Why Choose Us"
+        title="Our Clients / Why Choose Us"
         bgImage={`${import.meta.env.BASE_URL}assets/team.jpg`}
       />
 
@@ -30,7 +30,7 @@ export default function Support() {
       <section className="section bg-ivory">
         <div className="container">
           <Reveal className="text-center mb-12">
-            <span className="eyebrow-badge">WHO WE SUPPORT</span>
+            <span className="eyebrow-badge">OUR CLIENTS</span>
             <h2 className="section-title">Clients across the project lifecycle</h2>
           </Reveal>
 

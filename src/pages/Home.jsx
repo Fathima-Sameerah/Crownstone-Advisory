@@ -208,8 +208,7 @@ export default function Home() {
                 <ServiceCard
                   icon="Scale"
                   title="Claims & Dispute Advisory"
-                  badge="Specialist Service - Led by a Chartered Quantity Surveyor"
-                  items={CLAIMS_LIST.slice(0, 3)}
+                  items={CLAIMS_LIST.slice(0, 4)}
                   variant="white"
                 />
               </Link>
@@ -221,12 +220,12 @@ export default function Home() {
       {/* 5. Focus Band */}
       <FocusBand />
 
-      {/* 6. Who We Support Preview (2 columns) */}
+      {/* 6. Our Clients Preview (2 columns) */}
       <section className="section bg-ivory">
         <div className="container">
           <div className="two-col-grid align-center">
             <Reveal className="col-text">
-              <span className="eyebrow-badge">WHO WE SUPPORT</span>
+              <span className="eyebrow-badge">OUR CLIENTS</span>
               <h2 className="section-title">
                 Developers, contractors, consultants & owners
               </h2>
@@ -235,7 +234,7 @@ export default function Home() {
               </p>
               <div className="mt-8">
                 <Link to="/support" className="btn btn-primary">
-                  See Who We Support
+                  See Our Clients
                 </Link>
               </div>
             </Reveal>
