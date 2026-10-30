@@ -1270,23 +1270,6 @@ export default function Contact() {
               </Reveal>
             </div>
           </div>
-
-          {/* Full-width Map below */}
-          <Reveal delay={0.25} className="contact-map-fullwidth-wrap">
-            <div className="fullwidth-map-frame">
-              <iframe
-                title="Crownstone Advisory Location - Muthtagama, Kandy, Sri Lanka"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.545731110543!2d80.6063!3d7.2917!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae366266498abc%3A0x123456789!2sMuthtagama%2C%20Kandy%2C%20Sri%20Lanka!5e0!3m2!1sen!2slk!4v1698500000000!5m2!1sen!2slk"
-                width="100%"
-                height="260"
-                style={{ border: 0 }}
-                allowFullScreen=""
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="map-iframe"
-              />
-            </div>
-          </Reveal>
         </div>
       </section>
     </div>

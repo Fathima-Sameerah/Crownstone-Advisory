@@ -2,7 +2,7 @@ export const DOMAIN = "crownstone.com";
 export const PRIMARY_EMAIL = "info@crownstone.com";
 export const PHONE_DISPLAY = "+94 777 788 812";
 export const PHONE_LINK = "+94777788812";
-export const ADDRESS = "No 103, Kudugala Road, Muthtagama, Kandy, Sri Lanka";
+export const ADDRESS = "No 103, Kudugala Road, Wattegama, Kandy, Sri Lanka";
 
 export const ENQUIRY_EMAIL = "business@crownstone.com"; // business email that receives enquiries and bookings
 export const FORM_ENDPOINT = ""; // paste Formspree/EmailJS URL here
