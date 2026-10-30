@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { Mail } from 'lucide-react';
 import SEO from '../components/SEO';
 import Banner from '../components/Banner';
 import Reveal from '../components/Reveal';
 import ImageWithFallback from '../components/ImageWithFallback';
 import { BRAND } from '../data/content';
+import {
+  PRIMARY_EMAIL,
+  PHONE_DISPLAY,
+  PHONE_LINK,
+  ADDRESS,
+  DEPARTMENTS
+} from '../config/contact';
 
 export default function Contact() {
   const shouldReduceMotion = useReducedMotion();
 
   // Form State
   const [formData, setFormData] = useState({
+    department: DEPARTMENTS[0].label,
     name: '',
     email: '',
     phone: '',
@@ -24,6 +33,9 @@ export default function Contact() {
 
   const validate = () => {
     const errs = {};
+    if (!formData.department) {
+      errs.department = 'Please select a department.';
+    }
     if (!formData.name.trim()) {
       errs.name = 'Please enter your name.';
     }
@@ -60,6 +72,10 @@ export default function Contact() {
     setIsSubmitting(true);
     setStatusMessage('');
 
+    const selectedDept = DEPARTMENTS.find((d) => d.label === formData.department) || DEPARTMENTS[0];
+    const targetEmail = selectedDept.email;
+    const emailSubject = `Website enquiry - ${selectedDept.label}`;
+
     /**
      * =========================================================================
      * FORM SUBMISSION ENDPOINT CONFIGURATION:
@@ -80,22 +96,26 @@ export default function Contact() {
             'Content-Type': 'application/json',
             Accept: 'application/json'
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify({
+            ...formData,
+            department_email: targetEmail,
+            _subject: emailSubject
+          })
         });
 
         if (response.ok) {
           setSubmitted(true);
           setStatusMessage("Thank you! Your inquiry has been sent successfully. We will get back to you shortly.");
-          setFormData({ name: '', email: '', phone: '', message: '' });
+          setFormData({ department: DEPARTMENTS[0].label, name: '', email: '', phone: '', message: '' });
         } else {
           throw new Error('Submission failed');
         }
       } catch (err) {
         // Fallback to mailto
-        window.location.href = `mailto:${BRAND.email}?subject=Project Inquiry from ${encodeURIComponent(
-          formData.name
+        window.location.href = `mailto:${targetEmail}?subject=${encodeURIComponent(
+          emailSubject
         )}&body=${encodeURIComponent(
-          `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`
+          `Department: ${selectedDept.label}\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`
         )}`;
         setSubmitted(true);
         setStatusMessage("Thank you! An email draft has been prepared to send your inquiry.");
@@ -108,12 +128,12 @@ export default function Contact() {
           "Thank you for contacting Crownstone Advisory. Your message has been received and our team will get in touch with you promptly."
         );
         // Fallback mailto trigger
-        window.location.href = `mailto:${BRAND.email}?subject=Inquiry from ${encodeURIComponent(
-          formData.name
+        window.location.href = `mailto:${targetEmail}?subject=${encodeURIComponent(
+          emailSubject
         )}&body=${encodeURIComponent(
-          `Name: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`
+          `Department: ${selectedDept.label}\nName: ${formData.name}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\nMessage:\n${formData.message}`
         )}`;
-        setFormData({ name: '', email: '', phone: '', message: '' });
+        setFormData({ department: DEPARTMENTS[0].label, name: '', email: '', phone: '', message: '' });
         setIsSubmitting(false);
       }, 600);
     }
@@ -155,6 +175,41 @@ export default function Contact() {
                 )}
 
                 <form onSubmit={handleSubmit} noValidate className="contact-form">
+                  {/* Hidden field for backend/Formspree/EmailJS routing */}
+                  <input
+                    type="hidden"
+                    name="department_email"
+                    value={(DEPARTMENTS.find((d) => d.label === formData.department) || DEPARTMENTS[0]).email}
+                  />
+
+                  {/* Department Field */}
+                  <motion.div
+                    className="form-field-group"
+                    initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
+                    whileInView={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.04, duration: 0.4 }}
+                  >
+                    <label htmlFor="department" className="form-label">
+                      Department <span className="required-star">*</span>
+                    </label>
+                    <select
+                      id="department"
+                      name="department"
+                      value={formData.department}
+                      onChange={handleChange}
+                      className={`form-input form-select ${errors.department ? 'input-error' : ''}`}
+                      aria-required="true"
+                    >
+                      {DEPARTMENTS.map((dept) => (
+                        <option key={dept.label} value={dept.label}>
+                          {dept.label}
+                        </option>
+                      ))}
+                    </select>
+                    {errors.department && <span className="field-error">{errors.department}</span>}
+                  </motion.div>
+
                   {/* Name Field */}
                   <motion.div
                     className="form-field-group"
@@ -265,7 +320,7 @@ export default function Contact() {
               </div>
             </Reveal>
 
-            {/* Right Card: Contact Details + QR Code + Google Map */}
+            {/* Right Card: Contact Details + QR Code + Email Directory + Google Map */}
             <div className="contact-details-column">
               <Reveal delay={0.2}>
                 <div className="contact-card contact-details-card">
@@ -273,21 +328,21 @@ export default function Contact() {
 
                   <div className="contact-detail-group">
                     <span className="contact-detail-label">Mobile</span>
-                    <a href={`tel:${BRAND.phone.replace(/\s+/g, '')}`} className="contact-detail-value contact-phone-link">
-                      {BRAND.phone}
+                    <a href={`tel:${PHONE_LINK}`} className="contact-detail-value contact-phone-link">
+                      {PHONE_DISPLAY}
                     </a>
                   </div>
 
                   <div className="contact-detail-group">
                     <span className="contact-detail-label">Email</span>
-                    <a href={`mailto:${BRAND.email}`} className="contact-detail-value contact-email-link">
-                      {BRAND.email}
+                    <a href={`mailto:${PRIMARY_EMAIL}`} className="contact-detail-value contact-email-link">
+                      {PRIMARY_EMAIL}
                     </a>
                   </div>
 
                   <div className="contact-detail-group">
                     <span className="contact-detail-label">Address</span>
-                    <p className="contact-detail-value">{BRAND.address}</p>
+                    <p className="contact-detail-value">{ADDRESS}</p>
                   </div>
 
                   <div className="contact-badge-wrap">
@@ -312,6 +367,36 @@ export default function Contact() {
                       </div>
                     </div>
                   </div>
+                </div>
+              </Reveal>
+
+              {/* Email Directory Card */}
+              <Reveal delay={0.25}>
+                <div className="contact-card email-directory-card">
+                  <h2 className="contact-card-heading">Email Directory</h2>
+                  <ul className="email-directory-list">
+                    {DEPARTMENTS.map((dept, idx) => (
+                      <motion.li
+                        key={dept.label}
+                        className="email-directory-item"
+                        initial={shouldReduceMotion ? {} : { opacity: 0, x: -10 }}
+                        whileInView={shouldReduceMotion ? {} : { opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.05 * idx, duration: 0.35 }}
+                      >
+                        <div className="email-directory-icon-wrap" aria-hidden="true">
+                          <Mail size={16} />
+                        </div>
+                        <div className="email-directory-content">
+                          <span className="email-directory-label">{dept.label}</span>
+                          <a href={`mailto:${dept.email}`} className="email-directory-email">
+                            {dept.email}
+                          </a>
+                          <span className="email-directory-purpose">{dept.purpose}</span>
+                        </div>
+                      </motion.li>
+                    ))}
+                  </ul>
                 </div>
               </Reveal>
 

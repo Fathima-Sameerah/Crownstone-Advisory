@@ -942,6 +942,76 @@ h1, h2, h3, h4 {
   margin-top: 8px;
 }
 
+/* --- Vision & Mission --- */
+.vision-mission-section {
+  background:
+    radial-gradient(ellipse at 50% 0, rgba(242, 182, 50, 0.08), transparent 55%),
+    var(--color-ivory);
+}
+
+.vision-mission-heading {
+  margin-bottom: 40px;
+}
+
+.vision-mission-heading .section-title {
+  margin-bottom: 0;
+}
+
+.vision-mission-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (min-width: 900px) {
+  .vision-mission-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+}
+
+.vision-mission-card {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(24px, 3vw, 40px);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease;
+}
+
+.vision-mission-card::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-gold), rgba(242, 182, 50, 0.18));
+  content: "";
+}
+
+.vision-mission-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.vision-mission-card-heading {
+  margin-bottom: 20px;
+}
+
+.vision-mission-card h3 {
+  font-family: var(--font-sans);
+  margin: 0;
+}
+
+.vision-mission-card p {
+  color: var(--color-text-muted);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
 /* --- Practice Block --- */
 .practice-section {
   padding-top: 48px;
@@ -1515,6 +1585,16 @@ h1, h2, h3, h4 {
   line-height: 1.6;
 }
 
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230B1B3A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+  padding-right: 44px;
+}
+
 .input-error {
   border-color: #EF4444 !important;
   background-color: #FEF2F2 !important;
@@ -1634,6 +1714,100 @@ h1, h2, h3, h4 {
   color: var(--color-dark-gold);
   text-transform: uppercase;
   text-align: center;
+}
+
+/* Email Directory Card */
+.email-directory-card {
+  margin-top: 28px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.email-directory-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-hover);
+}
+
+.email-directory-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.email-directory-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+  transition: background-color 0.2s ease;
+}
+
+.email-directory-item:first-child {
+  padding-top: 4px;
+}
+
+.email-directory-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.email-directory-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background-color: rgba(242, 182, 50, 0.12);
+  color: var(--color-gold);
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.email-directory-item:hover .email-directory-icon-wrap {
+  background-color: rgba(242, 182, 50, 0.22);
+  color: var(--color-dark-gold);
+  transform: scale(1.08);
+}
+
+.email-directory-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.email-directory-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-navy);
+}
+
+.email-directory-email {
+  font-size: 14.5px;
+  color: var(--color-dark-gold);
+  text-decoration: none;
+  font-weight: 500;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  transition: color 0.2s ease;
+}
+
+.email-directory-email:hover {
+  color: var(--color-gold);
+  text-decoration: underline;
+}
+
+.email-directory-purpose {
+  font-size: 13px;
+  color: #64748B;
+  margin: 0;
+  margin-top: 2px;
+  line-height: 1.4;
 }
 
 /* Embedded Map */
@@ -1785,6 +1959,23 @@ h1, h2, h3, h4 {
 .footer-nav-link:hover {
   color: var(--color-gold);
   transform: translateX(4px);
+}
+
+.footer-more-emails {
+  margin-top: 18px;
+  font-size: 13.5px;
+}
+
+.footer-more-link {
+  color: var(--color-gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.2s ease, color 0.2s ease;
+  display: inline-block;
+}
+
+.footer-more-link:hover {
+  color: #F8D06B;
 }
 
 .footer-bottom-bar {

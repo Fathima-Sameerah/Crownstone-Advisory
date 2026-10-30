@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BRAND, NAV_LINKS } from '../data/content';
+import { PRIMARY_EMAIL, PHONE_DISPLAY, PHONE_LINK, ADDRESS } from '../config/contact';
 
 export default function Footer() {
   return (
@@ -32,19 +33,19 @@ export default function Footer() {
           <ul className="footer-contact-list">
             <li>
               <span className="footer-label">Mobile: </span>
-              <a href={`tel:${BRAND.phone.replace(/\s+/g, '')}`} className="footer-link">
-                {BRAND.phone}
+              <a href={`tel:${PHONE_LINK}`} className="footer-link">
+                {PHONE_DISPLAY}
               </a>
             </li>
             <li>
               <span className="footer-label">Email: </span>
-              <a href={`mailto:${BRAND.email}`} className="footer-link">
-                {BRAND.email}
+              <a href={`mailto:${PRIMARY_EMAIL}`} className="footer-link">
+                {PRIMARY_EMAIL}
               </a>
             </li>
             <li className="footer-address">
               <span className="footer-label">Address: </span>
-              <span>{BRAND.address}</span>
+              <span>{ADDRESS}</span>
             </li>
           </ul>
         </div>
@@ -61,6 +62,11 @@ export default function Footer() {
               </li>
             ))}
           </ul>
+          <div className="footer-more-emails">
+            <Link to="/contact" className="footer-more-link">
+              More emails on the Contact page
+            </Link>
+          </div>
         </div>
       </div>
 

@@ -15,6 +15,7 @@ import {
   CONTRACT_LIST,
   CLAIMS_LIST
 } from '../data/content';
+import { PRIMARY_EMAIL } from '../config/contact';
 
 export default function Home() {
   const shouldReduceMotion = useReducedMotion();
@@ -121,8 +122,8 @@ export default function Home() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.9 }}
             >
-              <a href={`mailto:${BRAND.email}`} className="hero-email-link">
-                {BRAND.email}
+              <a href={`mailto:${PRIMARY_EMAIL}`} className="hero-email-link">
+                {PRIMARY_EMAIL}
               </a>
             </motion.div>
           </div>
@@ -160,7 +161,37 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 3. Practice Block (Centred) */}
+      {/* 3. Vision & Mission */}
+      <section className="section vision-mission-section bg-ivory">
+        <div className="container">
+          <Reveal className="text-center vision-mission-heading">
+            <span className="eyebrow-badge">OUR PURPOSE</span>
+            <h2 className="section-title">Our Vision &amp; Mission</h2>
+          </Reveal>
+
+          <div className="vision-mission-grid">
+            <Reveal delay={0.1} className="vision-mission-card">
+              <div className="vision-mission-card-heading">
+                <h3 className="eyebrow-badge">Our Vision</h3>
+              </div>
+              <p>
+                To become a leading and trusted construction consultancy in Sri Lanka and the international market, recognised for professional excellence, integrity, innovation, and delivering sustainable value to our clients and the built environment.
+              </p>
+            </Reveal>
+
+            <Reveal delay={0.2} className="vision-mission-card">
+              <div className="vision-mission-card-heading">
+                <h3 className="eyebrow-badge">Our Mission</h3>
+              </div>
+              <p>
+                To deliver independent, reliable, and innovative construction consultancy solutions that empower our clients to make informed decisions, optimise project costs, manage contractual risks, and achieve successful project outcomes. Through technical expertise, ethical practices, and a client-focused approach, we are committed to providing excellence in quantity surveying, cost management, procurement, contract administration, and construction claims advisory.
+              </p>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Practice Block (Centred) */}
       <section className="section practice-section bg-ivory">
         <div className="container">
           <Reveal>
@@ -169,7 +200,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 4. Core Services (3 equal cards linking to /services) */}
+      {/* 5. Core Services (3 equal cards linking to /services) */}
       <section className="section bg-cream">
         <div className="container">
           <Reveal className="text-center mb-12">
@@ -217,10 +248,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 5. Focus Band */}
+      {/* 6. Focus Band */}
       <FocusBand />
 
-      {/* 6. Our Clients Preview (2 columns) */}
+      {/* 7. Our Clients Preview (2 columns) */}
       <section className="section bg-ivory">
         <div className="container">
           <div className="two-col-grid align-center">

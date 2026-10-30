@@ -1,12 +1,15 @@
+import { PRIMARY_EMAIL, PHONE_DISPLAY, PHONE_LINK, ADDRESS } from '../config/contact';
+
 export const BRAND = {
   name: "CROWNSTONE ADVISORY",
   subtitle: "Chartered Quantity Surveyors\n& Cost Consultants",
   practice: "SRI LANKA & GCC PRACTICE",
   tagline: "Commercial clarity. Entitlement protection. Dispute prevention.",
-  email: "crownstonelive@outlook.com",
-  phone: "+94 777 788 812",
-  phoneDisplay: "+94 777 788 812",
-  address: "No 103, Kudugala Road, Muthtagama, Kandy, Sri Lanka",
+  email: PRIMARY_EMAIL,
+  phone: PHONE_DISPLAY,
+  phoneDisplay: PHONE_DISPLAY,
+  phoneLink: PHONE_LINK,
+  address: ADDRESS,
   motto: "LOCAL EXPERTISE. REGIONAL PERSPECTIVE. GLOBAL STANDARDS."
 };
 
