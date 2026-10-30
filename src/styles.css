@@ -1509,16 +1509,35 @@ h1, h2, h3, h4 {
 }
 
 /* --- Contact Us Page (Page 5) --- */
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 40px;
+.contact-main-section {
+  padding-top: 64px;
+  padding-bottom: 72px;
 }
 
-@media (min-width: 900px) {
-  .contact-grid {
-    grid-template-columns: 1.15fr 0.85fr;
-    gap: 48px;
+.contact-intro-block {
+  max-width: 720px;
+  margin: 0 auto 48px;
+  text-align: center;
+}
+
+.contact-intro-text {
+  font-size: clamp(16px, 1.8vw, 18px);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin-top: 14px;
+}
+
+.contact-hero-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .contact-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 }
 
@@ -1526,23 +1545,67 @@ h1, h2, h3, h4 {
   background-color: var(--color-white);
   border: 1px solid var(--color-border-card);
   border-radius: var(--radius-card);
-  padding: 40px 32px;
+  padding: 36px;
   box-shadow: var(--shadow-card);
+  position: relative;
 }
 
-@media (min-width: 600px) {
-  .contact-card {
-    padding: 48px;
-  }
+.enquiry-card {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-card);
+  border-top: 4px solid var(--color-gold);
+  border-radius: var(--radius-card);
+  padding: 36px;
+  box-shadow: var(--shadow-card);
+  position: relative;
 }
 
-.contact-card-heading {
-  font-size: clamp(28px, 3.2vw, 36px);
-  margin-bottom: 28px;
+.consultation-card {
+  background: linear-gradient(to bottom, #FFF8E6, #FFFFFF);
+  border: 1px solid #F0D58C;
+  border-top: 4px solid #F2B632;
+  border-radius: var(--radius-card);
+  padding: 36px;
+  box-shadow: var(--shadow-card);
+  color: #0B1B3A;
+  position: relative;
+}
+
+.card-eyebrow {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.card-eyebrow-gold {
+  color: var(--color-dark-gold);
+}
+
+.card-eyebrow-amber {
+  color: #7A5A00;
+}
+
+.card-heading-title {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 2.8vw, 30px);
+  font-weight: 600;
+  color: var(--color-navy);
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+
+.card-note-muted {
+  font-size: 13.5px;
+  color: #5b6477;
+  margin-bottom: 22px;
+  line-height: 1.5;
 }
 
 .form-field-group {
-  margin-bottom: 22px;
+  margin-bottom: 18px;
   display: flex;
   flex-direction: column;
 }
@@ -1551,17 +1614,19 @@ h1, h2, h3, h4 {
   font-size: 14px;
   font-weight: 600;
   color: var(--color-navy);
-  margin-bottom: 8px;
-  letter-spacing: 0.3px;
+  margin-bottom: 6px;
+  letter-spacing: 0.2px;
+  text-align: left;
 }
 
 .required-star {
   color: #DC2626;
+  margin-left: 2px;
 }
 
 .form-input {
   width: 100%;
-  padding: 14px 18px;
+  padding: 12px 16px;
   font-size: 16px;
   font-family: var(--font-sans);
   color: var(--color-text-dark);
@@ -1576,13 +1641,13 @@ h1, h2, h3, h4 {
 .form-input:focus {
   background-color: #FFFFFF;
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 3px rgba(242, 182, 50, 0.2);
+  box-shadow: 0 0 0 3px rgba(242, 182, 50, 0.25);
 }
 
 .form-textarea {
   resize: vertical;
-  min-height: 130px;
-  line-height: 1.6;
+  min-height: 85px;
+  line-height: 1.5;
 }
 
 .form-select {
@@ -1591,8 +1656,8 @@ h1, h2, h3, h4 {
   -webkit-appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230B1B3A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 18px center;
-  padding-right: 44px;
+  background-position: right 16px center;
+  padding-right: 40px;
 }
 
 .input-error {
@@ -1601,51 +1666,423 @@ h1, h2, h3, h4 {
 }
 
 .field-error {
-  font-size: 13px;
+  font-size: 12.5px;
   color: #DC2626;
-  margin-top: 6px;
+  margin-top: 5px;
   font-weight: 500;
+  text-align: left;
 }
 
-.form-submit-row {
-  margin-top: 28px;
+@keyframes fieldShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
 }
 
-.form-submit-btn {
-  width: auto;
-  min-width: 180px;
+.field-shake {
+  animation: fieldShake 0.4s ease;
 }
 
-.form-success-banner {
+.btn-full-gold {
+  width: 100%;
+  min-height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.form-footer-note {
+  font-size: 12.5px;
+  color: #64748B;
+  text-align: center;
+  margin-top: 12px;
+  line-height: 1.4;
+}
+
+/* Free Consultation Stepper */
+.consult-step-nav {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background-color: #ECFDF5;
-  border: 1px solid #10B981;
-  color: #065F46;
-  padding: 16px 20px;
-  border-radius: 12px;
-  margin-bottom: 24px;
-  font-size: 15px;
-  font-weight: 500;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  padding: 0 4px;
 }
 
-.success-icon {
-  background-color: #10B981;
-  color: white;
-  width: 24px;
-  height: 24px;
+.consult-step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #7C7053;
+  user-select: none;
+}
+
+.consult-step-item.active {
+  color: #0B1B3A;
+}
+
+.consult-step-num {
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-size: 12px;
+  font-weight: 700;
+  background-color: #E8DCC0;
+  color: #5B4D2C;
+  transition: all 0.3s ease;
   flex-shrink: 0;
+}
+
+.consult-step-item.active .consult-step-num {
+  background-color: #F2B632;
+  color: #0B1B3A;
+  box-shadow: 0 0 0 3px rgba(242, 182, 50, 0.25);
+}
+
+.consult-step-item.completed .consult-step-num {
+  background-color: #0B1B3A;
+  color: #F2B632;
+}
+
+.consult-step-divider {
+  flex: 1;
+  height: 2px;
+  background-color: #E8DCC0;
+  margin: 0 10px;
+  transition: background-color 0.3s ease;
+}
+
+.consult-step-divider.filled {
+  background-color: #F2B632;
+}
+
+.consult-step-box {
+  background: #FFFFFF;
+  border: 1px solid #E8DCC0;
+  border-radius: 14px;
+  padding: 22px 20px;
+  margin-bottom: 20px;
+}
+
+.consult-step-box-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #7A5A00;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Date Chips */
+.chips-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-navy);
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.date-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.date-chip {
+  min-height: 48px;
+  min-width: 44px;
+  padding: 8px 4px;
+  background: #FFFFFF;
+  border: 1.5px solid #E8DCC0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.date-chip:hover {
+  border-color: #F2B632;
+  transform: scale(1.05);
+}
+
+.date-chip.selected {
+  background-color: #F2B632;
+  border-color: #F2B632;
+  box-shadow: 0 4px 10px rgba(242, 182, 50, 0.35);
+  transform: scale(1.02);
+}
+
+.date-chip-weekday {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #64748B;
+  text-transform: uppercase;
+}
+
+.date-chip.selected .date-chip-weekday {
+  color: #0B1B3A;
+  font-weight: 700;
+}
+
+.date-chip-day {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0B1B3A;
+  line-height: 1.1;
+}
+
+/* Time Chips */
+.time-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 480px) {
+  .time-chips-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.time-chip {
+  min-height: 44px;
+  padding: 10px 4px;
+  background: #FFFFFF;
+  border: 1.5px solid #E8DCC0;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #0B1B3A;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.time-chip:hover {
+  border-color: #F2B632;
+  transform: scale(1.05);
+}
+
+.time-chip.selected {
+  background-color: #F2B632;
+  border-color: #F2B632;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(242, 182, 50, 0.35);
+  transform: scale(1.02);
+}
+
+.consult-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12.5px;
+  color: #5b6477;
+  margin-top: 10px;
+}
+
+.consult-duration-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #7A5A00;
+  background: rgba(242, 182, 50, 0.18);
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+/* Step 3 Summary */
+.consult-summary-card {
+  background: #FAF7F0;
+  border: 1px solid #E8DCC0;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.consult-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 13.5px;
+}
+
+.consult-summary-label {
+  color: #64748B;
+  font-size: 12.5px;
+  flex-shrink: 0;
+}
+
+.consult-summary-val {
+  font-weight: 600;
+  color: #0B1B3A;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.consult-summary-highlight {
+  background-color: rgba(242, 182, 50, 0.18);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #7A5A00;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.step-buttons-row {
+  display: flex;
+  gap: 10px;
+}
+
+.step-buttons-row .btn {
+  flex: 1;
+}
+
+.btn-back {
+  background: #FFFFFF;
+  color: #0B1B3A;
+  border: 1.5px solid #D6D3D1;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-back:hover {
+  background: #F3EFE6;
+  border-color: #0B1B3A;
+}
+
+/* Submit Spinner */
+.submit-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(11, 27, 58, 0.25);
+  border-top-color: #0B1B3A;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Success View */
+.form-success-view {
+  padding: 36px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.success-circle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: rgba(242, 182, 50, 0.15);
+  border: 2px solid #F2B632;
+  color: var(--color-dark-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.success-title {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--color-navy);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.success-msg {
+  font-size: 14.5px;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  max-width: 440px;
+  margin-bottom: 24px;
+}
+
+.success-reset-btn {
+  background: none;
+  border: none;
+  color: var(--color-dark-gold);
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.success-reset-btn:hover {
+  color: var(--color-navy);
+}
+
+/* Lower Cream Directory Section */
+.contact-directory-section {
+  background-color: #F6EFDF;
+  padding-top: 64px;
+  padding-bottom: 72px;
+}
+
+.contact-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .contact-details-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.contact-details-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.contact-details-right-col {
+  display: flex;
+  flex-direction: column;
 }
 
 /* Contact Details Info Card */
 .contact-detail-group {
   margin-bottom: 20px;
+  text-align: left;
 }
 
 .contact-detail-label {
@@ -1661,6 +2098,7 @@ h1, h2, h3, h4 {
   font-size: 16px;
   color: var(--color-text-muted);
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .contact-phone-link:hover,
@@ -1670,8 +2108,9 @@ h1, h2, h3, h4 {
 }
 
 .contact-badge-wrap {
-  margin-top: 24px;
-  margin-bottom: 24px;
+  margin-top: 20px;
+  margin-bottom: 4px;
+  text-align: left;
 }
 
 .contact-pill-badge {
@@ -1687,39 +2126,134 @@ h1, h2, h3, h4 {
 }
 
 .contact-qr-wrapper {
-  margin-top: 20px;
+  margin-top: 18px;
+  text-align: left;
 }
 
-.qr-box {
-  width: 110px;
-  height: 110px;
-  border: 2px dashed #B89E5B;
-  border-radius: 12px;
+.contact-qr-wrapper .qr-img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+  padding: 4px;
+  background: #FFFFFF;
+}
+
+/* UK Branch Card */
+.uk-branch-card {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-card);
+  border-radius: var(--radius-card);
+  padding: 28px 32px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  text-align: left;
+}
+
+.uk-branch-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-hover);
+}
+
+.uk-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #0B1B3A;
+  border: 2px solid #F2B632;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  background-color: #FAF6EE;
+  color: #F2B632;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(11, 27, 58, 0.15);
 }
 
-.qr-img {
+.uk-avatar-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-.qr-placeholder {
-  font-size: 12px;
-  font-weight: 600;
+.uk-branch-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.uk-branch-eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
   color: var(--color-dark-gold);
   text-transform: uppercase;
-  text-align: center;
+}
+
+.uk-branch-name {
+  font-size: 16.5px;
+  font-weight: 700;
+  color: var(--color-navy);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.uk-branch-role {
+  font-size: 13px;
+  color: #64748B;
+  margin-bottom: 6px;
+}
+
+.uk-branch-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.uk-contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--color-navy);
+  text-decoration: none;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  transition: color 0.2s ease;
+}
+
+.uk-contact-link:hover {
+  color: var(--color-dark-gold);
+  text-decoration: underline;
+}
+
+.uk-contact-icon {
+  color: var(--color-dark-gold);
+  flex-shrink: 0;
 }
 
 /* Email Directory Card */
+.contact-directory-section .email-directory-card {
+  margin-top: 0;
+}
+
 .email-directory-card {
-  margin-top: 28px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-card);
+  border-radius: var(--radius-card);
+  padding: 36px;
+  box-shadow: var(--shadow-card);
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  text-align: left;
 }
 
 .email-directory-card:hover {
@@ -1810,30 +2344,58 @@ h1, h2, h3, h4 {
   line-height: 1.4;
 }
 
-/* Embedded Map */
-.contact-map-wrapper {
-  margin-top: 28px;
+/* Full Width Map */
+.contact-map-fullwidth-wrap {
+  margin-top: 40px;
 }
 
-.map-frame-card {
+.fullwidth-map-frame {
+  width: 100%;
+  height: 260px;
   border-radius: var(--radius-card);
   overflow: hidden;
-  box-shadow: var(--shadow-card);
   border: 1px solid var(--color-border-card);
-  height: 300px;
+  box-shadow: var(--shadow-card);
 }
 
-@media (min-width: 900px) {
-  .map-frame-card {
-    height: 320px;
+@media (max-width: 599px) {
+  .enquiry-card,
+  .consultation-card,
+  .contact-details-card,
+  .uk-branch-card,
+  .email-directory-card {
+    padding: 24px 20px;
   }
-}
-
-.map-iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
+  .uk-branch-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+  }
+  .uk-branch-links {
+    align-items: center;
+  }
+  .date-chips-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+  }
+  .date-chip {
+    padding: 6px 2px;
+    min-height: 46px;
+  }
+  .date-chip-weekday {
+    font-size: 10px;
+  }
+  .date-chip-day {
+    font-size: 15px;
+  }
+  .time-chips-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  .consult-step-item span:not(.consult-step-num) {
+    display: none;
+  }
 }
 
 /* --- Footer --- */
