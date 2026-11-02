@@ -7,7 +7,15 @@ import {
   HardHat,
   User,
   Home,
-  Briefcase
+  Briefcase,
+  FileWarning,
+  TrendingUp,
+  Workflow,
+  ScrollText,
+  Handshake,
+  Gavel,
+  ClipboardList,
+  ShieldCheck
 } from 'lucide-react';
 
 const ICON_MAP = {
@@ -18,11 +26,19 @@ const ICON_MAP = {
   HardHat,
   User,
   Home,
-  Briefcase
+  Briefcase,
+  FileWarning,
+  TrendingUp,
+  Workflow,
+  ScrollText,
+  Handshake,
+  Gavel,
+  ClipboardList,
+  ShieldCheck
 };
 
-export default function IconCircle({ name, size = 26, strokeWidth = 2.4, className = "" }) {
-  const IconComponent = ICON_MAP[name] || FileText;
+export default function IconCircle({ name, icon: IconProp, size = 26, strokeWidth = 2.4, className = "" }) {
+  const IconComponent = IconProp || ICON_MAP[name] || FileText;
 
   return (
     <div className={`icon-circle ${className}`} aria-hidden="true">

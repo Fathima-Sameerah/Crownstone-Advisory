@@ -2572,6 +2572,410 @@ h1, h2, h3, h4 {
   }
 }
 
+/* ==========================================================================
+   SERVICES PAGE ENHANCEMENTS: QUICK-JUMP, SCOPE, TENDER, COMMITMENT
+   ========================================================================== */
+
+/* Section Targets & Smooth Scroll Margins */
+#core, #scope, #tender, #claims,
+.services-nav-target {
+  scroll-margin-top: 116px;
+}
+
+@media (max-width: 899px) {
+  #core, #scope, #tender, #claims,
+  .services-nav-target {
+    scroll-margin-top: 106px;
+  }
+}
+
+@media (max-width: 599px) {
+  #core, #scope, #tender, #claims,
+  .services-nav-target {
+    scroll-margin-top: 96px;
+  }
+}
+
+@media (max-width: 400px) {
+  #core, #scope, #tender, #claims,
+  .services-nav-target {
+    scroll-margin-top: 90px;
+  }
+}
+
+/* 0. Quick-Jump Links */
+.services-jump-section {
+  padding: 28px 0 12px 0;
+  background-color: var(--color-ivory);
+  position: relative;
+  z-index: 10;
+}
+
+.services-jump-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.services-jump-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 4px 8px;
+}
+
+.services-jump-track::-webkit-scrollbar {
+  display: none;
+}
+
+.services-jump-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  min-height: 44px;
+  padding: 0 22px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-card);
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-navy);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(11, 27, 58, 0.04);
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+}
+
+.services-jump-pill:hover {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-navy);
+  font-weight: 600;
+  transform: translateY(-1px);
+}
+
+.services-jump-pill.active {
+  background-color: var(--color-gold);
+  border-color: var(--color-gold);
+  color: var(--color-navy);
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(242, 182, 50, 0.35);
+}
+
+@media (max-width: 768px) {
+  .services-jump-section {
+    padding: 20px 0 8px 0;
+  }
+  .services-jump-track {
+    justify-content: flex-start;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* 1. Scope of Services Grid & Cards */
+.scope-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  width: 100%;
+}
+
+@media (min-width: 640px) and (max-width: 1024px) {
+  .scope-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .scope-card-wrapper {
+    grid-column: span 2;
+  }
+  .scope-card-wrapper:nth-child(5) {
+    grid-column: 2 / span 2;
+  }
+}
+
+@media (min-width: 1025px) {
+  .scope-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  .scope-card-wrapper {
+    grid-column: span 2;
+  }
+  .scope-card-wrapper:nth-child(4) {
+    grid-column: 2 / span 2;
+  }
+  .scope-card-wrapper:nth-child(5) {
+    grid-column: 4 / span 2;
+  }
+}
+
+.scope-card-wrapper {
+  height: 100%;
+  display: flex;
+}
+
+.scope-card {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-card);
+  border-radius: var(--radius-card);
+  padding: 32px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (max-width: 639px) {
+  .scope-card {
+    padding: 24px;
+  }
+}
+
+.scope-card:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-hover);
+}
+
+.scope-card:hover .icon-circle {
+  transform: rotate(6deg) scale(1.08);
+}
+
+.scope-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.scope-card-num {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-gold);
+  line-height: 1;
+  letter-spacing: 1px;
+}
+
+.scope-card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-navy);
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.scope-card-desc {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  margin: 0;
+  flex-grow: 1;
+}
+
+/* 2. Pre-Contract Advisory & Tender Management */
+.tender-intro-text {
+  max-width: 760px;
+  margin-bottom: 40px;
+  font-size: 17px;
+  line-height: 1.65;
+  color: var(--color-text-muted);
+}
+
+.tender-two-card-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  margin-bottom: 40px;
+  width: 100%;
+}
+
+@media (min-width: 900px) {
+  .tender-two-card-row {
+    grid-template-columns: repeat(2, 1fr);
+    align-items: stretch;
+  }
+}
+
+.tender-card-col {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.tender-card {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-card);
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+}
+
+@media (max-width: 639px) {
+  .tender-card {
+    padding: 28px 20px;
+  }
+}
+
+.tender-card-white {
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border-card);
+  color: var(--color-navy);
+}
+
+.tender-card-white:hover {
+  border-color: var(--color-gold);
+  box-shadow: var(--shadow-hover);
+}
+
+.tender-card-white:hover .icon-circle {
+  transform: rotate(6deg) scale(1.08);
+}
+
+.tender-card-navy {
+  background-color: var(--color-navy);
+  border: 1px solid var(--color-royal-navy);
+  color: var(--color-white);
+}
+
+.tender-card-navy:hover {
+  border-color: var(--color-gold);
+  box-shadow: 0 16px 36px rgba(11, 27, 58, 0.3);
+}
+
+.tender-card-navy:hover .icon-circle {
+  transform: rotate(6deg) scale(1.08);
+}
+
+.tender-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.tender-card-title {
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 24px;
+  min-height: 2.6em;
+}
+
+@media (max-width: 899px) {
+  .tender-card-title {
+    min-height: auto;
+  }
+}
+
+.tender-card-navy .tender-card-title {
+  color: var(--color-white);
+}
+
+.tender-card-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  list-style: none;
+  padding: 0;
+}
+
+.tender-card-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.tender-card-item:last-child {
+  border-bottom: none;
+}
+
+.tender-card-navy .tender-card-item {
+  color: #E2E8F0;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.tender-card-item-text {
+  flex: 1;
+}
+
+/* Our Commitment Band */
+.commitment-card {
+  position: relative;
+  background-color: var(--color-white);
+  border-radius: var(--radius-card);
+  padding: 40px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  border: 1px solid var(--color-border-card);
+  border-left: 4px solid var(--color-gold);
+  width: 100%;
+}
+
+@media (max-width: 639px) {
+  .commitment-card {
+    padding: 24px;
+  }
+}
+
+.commitment-gold-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background-color: var(--color-gold);
+}
+
+.commitment-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.commitment-icon {
+  color: var(--color-gold);
+  flex-shrink: 0;
+}
+
+.commitment-text {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--color-navy);
+  margin: 0;
+}
+
+@media (max-width: 639px) {
+  .commitment-text {
+    font-size: 18px;
+  }
+}
+
 /* --- Accessibility & Focus Outlines --- */
 :focus-visible {
   outline: 2px solid var(--color-gold);
