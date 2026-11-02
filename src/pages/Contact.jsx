@@ -1,4 +1,5 @@
 import React, { useState, useRef, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import {
   Mail,
@@ -1257,10 +1258,24 @@ export default function Contact() {
                           <Mail size={16} />
                         </div>
                         <div className="email-directory-content">
-                          <span className="email-directory-label">{dept.label}</span>
-                          <a href={`mailto:${dept.email}`} className="email-directory-email">
-                            {dept.email}
-                          </a>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                            <span className="email-directory-label">{dept.label}</span>
+                            {dept.email === 'careers@crownstone.com' && (
+                              <Link to="/careers" style={{ fontSize: '13px', color: 'var(--color-dark-gold)', fontWeight: 600 }}>
+                                View Careers &rarr;
+                              </Link>
+                            )}
+                          </div>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                            <a href={`mailto:${dept.email}`} className="email-directory-email">
+                              {dept.email}
+                            </a>
+                            {dept.email === 'careers@crownstone.com' && (
+                              <Link to="/careers" style={{ fontSize: '13px', color: 'var(--color-royal-navy)', textDecoration: 'underline' }}>
+                                Careers page
+                              </Link>
+                            )}
+                          </div>
                           <span className="email-directory-purpose">{dept.purpose}</span>
                         </div>
                       </motion.li>

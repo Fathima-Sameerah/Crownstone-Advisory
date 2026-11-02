@@ -8,12 +8,14 @@ import CtaBand from '../components/CtaBand';
 import PracticeBlock from '../components/PracticeBlock';
 import ServiceCard from '../components/ServiceCard';
 import ImageWithFallback from '../components/ImageWithFallback';
+import IconCircle from '../components/IconCircle';
 import {
   BRAND,
   ABOUT_TEXT,
   QS_LIST,
   CONTRACT_LIST,
-  CLAIMS_LIST
+  CLAIMS_LIST,
+  CLIENT_TYPES
 } from '../data/content';
 import { PRIMARY_EMAIL } from '../config/contact';
 
@@ -251,38 +253,51 @@ export default function Home() {
       {/* 6. Focus Band */}
       <FocusBand />
 
-      {/* 7. Our Clients Preview (2 columns) */}
+      {/* 7. Our Clients (5 Centred Icon Cards) */}
       <section className="section bg-ivory">
         <div className="container">
-          <div className="two-col-grid align-center">
-            <Reveal className="col-text">
-              <span className="eyebrow-badge">OUR CLIENTS</span>
-              <h2 className="section-title">
-                Developers, contractors, consultants & owners
-              </h2>
-              <p className="client-types-inline">
-                Private developers · Contractors & subcontractors · Consultants · Property owners · Institutional and individual clients
-              </p>
-              <div className="mt-8">
-                <Link to="/support" className="btn btn-primary">
-                  See Our Clients
-                </Link>
-              </div>
-            </Reveal>
+          <Reveal className="text-center mb-12">
+            <span className="eyebrow-badge">OUR CLIENTS</span>
+            <h2 className="section-title">Clients across the project lifecycle</h2>
+          </Reveal>
 
-            <Reveal delay={0.2} className="col-media">
-              <ImageWithFallback
-                src={`${import.meta.env.BASE_URL}assets/team.jpg`}
-                alt="Two Crownstone Advisory engineers reviewing construction blueprints"
-                className="rounded-image-card"
-                placeholderText="Team Image"
-              />
-            </Reveal>
+          <div className="home-clients-grid">
+            {CLIENT_TYPES.map((client, index) => (
+              <motion.div
+                key={client.title}
+                className="home-client-card-wrapper"
+                initial={shouldReduceMotion ? {} : { opacity: 0, y: 32 }}
+                whileInView={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 0.1 * index,
+                  ease: [0.22, 1, 0.36, 1]
+                }}
+              >
+                <motion.div
+                  className="home-client-card"
+                  whileHover={shouldReduceMotion ? {} : { y: -8 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                >
+                  <motion.div
+                    className="home-client-icon-wrap"
+                    initial={shouldReduceMotion ? {} : { scale: 0.6, opacity: 0 }}
+                    whileInView={shouldReduceMotion ? {} : { scale: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.1 * index + 0.15 }}
+                  >
+                    <IconCircle name={client.icon} size={28} />
+                  </motion.div>
+                  <h3 className="home-client-title">{client.title}</h3>
+                </motion.div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 7. CTA Band */}
+      {/* 8. CTA Band */}
       <CtaBand
         heading="Need commercial clarity on your project?"
         buttonText="Contact Us"

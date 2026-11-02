@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -9,7 +9,7 @@ import ScrollToTop from './components/ScrollToTop';
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
 const Services = lazy(() => import('./pages/Services'));
-const Support = lazy(() => import('./pages/Support'));
+const Careers = lazy(() => import('./pages/Careers'));
 const Contact = lazy(() => import('./pages/Contact'));
 
 function PageFallback() {
@@ -64,7 +64,8 @@ export default function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/services" element={<Services />} />
-                <Route path="/support" element={<Support />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/support" element={<Navigate to="/" replace />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="*" element={<Home />} />
               </Routes>

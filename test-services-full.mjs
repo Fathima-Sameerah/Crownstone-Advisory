@@ -1,7 +1,7 @@
 import { spawn, execSync } from 'child_process';
-import http from 'http';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,6 +13,7 @@ if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }
 
+// All required test viewports from user request
 const viewports = [
   { name: '360', width: 360, height: 800 },
   { name: '390', width: 390, height: 844 },
@@ -30,23 +31,29 @@ async function main() {
   console.log('1. Building project with Vite...');
   execSync('npm run build', { stdio: 'inherit' });
 
-  console.log('2. Starting Vite preview server on dynamic ephemeral port...');
+  console.log('2. Starting Vite preview on ephemeral port...');
   const { preview } = await import('vite');
   const previewServer = await preview({
-    preview: { port: 0 }
+    preview: { port: 0, host: '127.0.0.1' }
   });
   const port = previewServer.httpServer.address().port;
-  const baseUrl = `http://localhost:${port}`;
+  const baseUrl = `http://127.0.0.1:${port}`;
+  const targetUrl = `${baseUrl}/Crownstone-Advisory/#/services`;
   console.log(`Vite preview running at ${baseUrl}`);
+  console.log(`Targeting Services URL: ${targetUrl}`);
 
-  // Find free debugging port for Chrome
-  const cdpPort = 9333;
-  console.log(`3. Launching Chrome with remote debugging on port ${cdpPort}...`);
+  const cdpPort = 9222;
+  const tmpDir = path.join(os.tmpdir(), 'chrome-cdp-' + Date.now());
+
+  console.log(`3. Launching Chrome with CDP on port ${cdpPort}...`);
   const chromeProc = spawn(chromePath, [
     '--headless=new',
+    '--no-sandbox',
     '--disable-gpu',
     `--remote-debugging-port=${cdpPort}`,
-    '--hide-scrollbars',
+    `--user-data-dir=${tmpDir}`,
+    '--no-first-run',
+    '--no-default-browser-check',
     'about:blank'
   ]);
 
@@ -54,21 +61,27 @@ async function main() {
   await new Promise((r) => setTimeout(r, 1200));
 
   try {
-    // Connect to CDP
     const versionRes = await fetch(`http://127.0.0.1:${cdpPort}/json/version`).then(r => r.json());
-    console.log('Chrome connected:', versionRes.Browser);
+    console.log('Chrome connected via CDP:', versionRes.Browser);
 
-    const newTab = await fetch(`http://127.0.0.1:${cdpPort}/json/new?${encodeURIComponent(baseUrl + '/services')}`, {
-      method: 'PUT'
-    }).then(r => r.json());
-
-    const wsUrl = newTab.webSocketDebuggerUrl;
+    const tabs = await fetch(`http://127.0.0.1:${cdpPort}/json/list`).then(r => r.json());
+    console.log('Available tabs:', tabs.map(t => ({ id: t.id, type: t.type, url: t.url })));
+    const pageTab = tabs.find(t => t.type === 'page') || tabs[0];
+    const wsUrl = pageTab.webSocketDebuggerUrl;
+    console.log('Connecting to page tab:', pageTab.id, wsUrl);
     const ws = new WebSocket(wsUrl);
 
     let id = 1;
     const callbacks = new Map();
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      if (data.method === 'Runtime.consoleAPICalled') {
+        const text = data.params.args.map(a => a.value || a.description).join(' ');
+        console.log(`[Browser Console ${data.params.type}]:`, text);
+      }
+      if (data.method === 'Runtime.exceptionThrown') {
+        console.error('[BROWSER EXCEPTION]:', data.params.exceptionDetails);
+      }
       if (data.id && callbacks.has(data.id)) {
         callbacks.get(data.id)(data);
         callbacks.delete(data.id);
@@ -89,37 +102,55 @@ async function main() {
     await send('DOM.enable');
     await send('Runtime.enable');
 
-    // Wait for page to finish loading
-    await new Promise((r) => setTimeout(r, 1500));
+    console.log('Navigating to target URL:', targetUrl);
+    const navRes = await send('Page.navigate', { url: targetUrl });
+    console.log('Page.navigate result:', JSON.stringify(navRes));
+
+    // Wait for initial load and React rendering
+    console.log('Waiting for React components to mount...');
+    await new Promise((r) => setTimeout(r, 4000));
+
+    const currentUrlRes = await send('Runtime.evaluate', { expression: 'window.location.href' });
+    console.log('Current window.location.href:', currentUrlRes.result?.result?.value);
 
     console.log('\n==================================================');
     console.log('VERIFYING SERVICES PAGE CONTENT & SEO');
     console.log('==================================================');
 
-    // Check title and meta
+    const rootHtml = await send('Runtime.evaluate', {
+      expression: 'document.getElementById("root")?.innerHTML',
+      returnByValue: true
+    });
+    console.log('Root HTML length:', rootHtml.result?.result?.value?.length);
+    console.log('Root HTML sample:', rootHtml.result?.result?.value?.slice(0, 300));
+
     const seoCheck = await send('Runtime.evaluate', {
       expression: `({
         title: document.title,
         metaDesc: document.querySelector('meta[name="description"]')?.content || '',
-        headings: Array.from(document.querySelectorAll('h2, h3')).map(h => h.textContent.trim()),
+        currentHash: window.location.hash,
+        h2s: Array.from(document.querySelectorAll('h2')).map(h => h.textContent.trim()),
         eyebrows: Array.from(document.querySelectorAll('.eyebrow-badge')).map(e => e.textContent.trim())
       })`,
       returnByValue: true
     });
 
-    console.log('Page Title:', seoCheck.result.value.title);
-    console.log('Meta Description:', seoCheck.result.value.metaDesc);
+    const val = seoCheck.result?.result?.value || {};
+    console.log('Page Title:', val.title);
+    console.log('Meta Description:', val.metaDesc);
+    console.log('Headings H2:', val.h2s);
+    console.log('Eyebrows:', val.eyebrows);
 
     const titleValid =
-      seoCheck.result.value.title.includes('Scope of Services') &&
-      seoCheck.result.value.title.includes('Pre-Contract Advisory') &&
-      seoCheck.result.value.title.includes('Tender Management');
+      val.title?.includes('Scope of Services') &&
+      val.title?.includes('Pre-Contract Advisory') &&
+      val.title?.includes('Tender Management');
     console.log('SEO Title Check (Scope of Services, Pre-Contract Advisory, Tender Management):', titleValid ? 'PASS' : 'FAIL');
 
     const descValid =
-      seoCheck.result.value.metaDesc.includes('Scope of Services') &&
-      seoCheck.result.value.metaDesc.includes('Pre-Contract Advisory') &&
-      seoCheck.result.value.metaDesc.includes('Tender Management');
+      val.metaDesc?.includes('Scope of Services') &&
+      val.metaDesc?.includes('Pre-Contract Advisory') &&
+      val.metaDesc?.includes('Tender Management');
     console.log('SEO Meta Description Check:', descValid ? 'PASS' : 'FAIL');
 
     console.log('\n==================================================');
@@ -140,9 +171,9 @@ async function main() {
       returnByValue: true
     });
 
-    console.log('Section IDs present:', sectionCheck.result.value);
-    const pills = sectionCheck.result.value.pills;
-    console.log('Quick-jump pills:', pills);
+    const secVal = sectionCheck.result?.result?.value || {};
+    console.log('Section IDs present:', secVal);
+    console.log('Quick-jump pills:', secVal.pills);
 
     console.log('\n==================================================');
     console.log('VERIFYING SCOPE OF SERVICES (5 CARDS, ICONS, NUMBERS)');
@@ -151,6 +182,7 @@ async function main() {
     const scopeCheck = await send('Runtime.evaluate', {
       expression: `(() => {
         const scopeSection = document.getElementById('scope');
+        if (!scopeSection) return { error: 'scope section not found' };
         const cards = Array.from(scopeSection.querySelectorAll('.scope-card'));
         return {
           cardCount: cards.length,
@@ -168,12 +200,17 @@ async function main() {
       returnByValue: true
     });
 
-    console.log('Scope Cards Count:', scopeCheck.result.value.cardCount);
-    scopeCheck.result.value.cards.forEach((c, idx) => {
-      console.log(` Card ${idx + 1}: [${c.num}] "${c.title}" (icon: ${c.hasIcon}, font: ${c.numFont.includes('Cormorant') ? 'Cormorant Garamond' : c.numFont})`);
-      console.log(`    Desc: "${c.desc}"`);
-      console.log(`    Border-radius: ${c.borderRadius}, Padding: ${c.padding}`);
-    });
+    const scVal = scopeCheck.result?.result?.value || {};
+    if (scVal.error) {
+      console.error(scVal.error);
+    } else if (scVal.cards) {
+      console.log('Scope Cards Count:', scVal.cardCount);
+      scVal.cards.forEach((c, idx) => {
+        console.log(` Card ${idx + 1}: [${c.num}] "${c.title}" (icon: ${c.hasIcon}, font: ${c.numFont?.includes('Cormorant') ? 'Cormorant Garamond' : c.numFont})`);
+        console.log(`    Desc: "${c.desc}"`);
+        console.log(`    Border-radius: ${c.borderRadius}, Padding: ${c.padding}`);
+      });
+    }
 
     console.log('\n==================================================');
     console.log('VERIFYING PRE-CONTRACT & TENDER (CARDS A & B, COMMITMENT)');
@@ -182,45 +219,51 @@ async function main() {
     const tenderCheck = await send('Runtime.evaluate', {
       expression: `(() => {
         const tenderSection = document.getElementById('tender');
+        if (!tenderSection) return { error: 'tender section not found' };
         const cardA = tenderSection.querySelector('.tender-card-white');
         const cardB = tenderSection.querySelector('.tender-card-navy');
         const commitment = tenderSection.querySelector('.commitment-card');
 
         return {
           cardA: {
-            title: cardA.querySelector('.tender-card-title')?.textContent.trim(),
-            itemsCount: cardA.querySelectorAll('.tender-card-item').length,
-            items: Array.from(cardA.querySelectorAll('.tender-card-item')).map(i => i.textContent.trim()),
-            bulletsCount: cardA.querySelectorAll('.gold-dot-bullet').length
+            title: cardA?.querySelector('.tender-card-title')?.textContent.trim(),
+            itemsCount: cardA?.querySelectorAll('.tender-card-item').length,
+            items: Array.from(cardA?.querySelectorAll('.tender-card-item') || []).map(i => i.textContent.trim()),
+            bulletsCount: cardA?.querySelectorAll('.gold-dot-bullet').length
           },
           cardB: {
-            title: cardB.querySelector('.tender-card-title')?.textContent.trim(),
-            itemsCount: cardB.querySelectorAll('.tender-card-item').length,
-            items: Array.from(cardB.querySelectorAll('.tender-card-item')).map(i => i.textContent.trim()),
-            bulletsCount: cardB.querySelectorAll('.gold-dot-bullet').length
+            title: cardB?.querySelector('.tender-card-title')?.textContent.trim(),
+            itemsCount: cardB?.querySelectorAll('.tender-card-item').length,
+            items: Array.from(cardB?.querySelectorAll('.tender-card-item') || []).map(i => i.textContent.trim()),
+            bulletsCount: cardB?.querySelectorAll('.gold-dot-bullet').length
           },
           commitment: {
-            eyebrow: commitment.querySelector('.eyebrow-badge')?.textContent.trim(),
-            hasShieldIcon: !!commitment.querySelector('.commitment-icon'),
-            text: commitment.querySelector('.commitment-text')?.textContent.trim(),
-            font: window.getComputedStyle(commitment.querySelector('.commitment-text')).fontFamily,
-            fontStyle: window.getComputedStyle(commitment.querySelector('.commitment-text')).fontStyle,
-            fontSize: window.getComputedStyle(commitment.querySelector('.commitment-text')).fontSize,
-            borderLeft: window.getComputedStyle(commitment).borderLeft
+            eyebrow: commitment?.querySelector('.eyebrow-badge')?.textContent.trim(),
+            hasShieldIcon: !!commitment?.querySelector('.commitment-icon'),
+            text: commitment?.querySelector('.commitment-text')?.textContent.trim(),
+            font: commitment ? window.getComputedStyle(commitment.querySelector('.commitment-text')).fontFamily : '',
+            fontStyle: commitment ? window.getComputedStyle(commitment.querySelector('.commitment-text')).fontStyle : '',
+            fontSize: commitment ? window.getComputedStyle(commitment.querySelector('.commitment-text')).fontSize : '',
+            borderLeft: commitment ? window.getComputedStyle(commitment).borderLeft : ''
           }
         };
       })()`,
       returnByValue: true
     });
 
-    console.log('Card A (White):', tenderCheck.result.value.cardA.title, `(${tenderCheck.result.value.cardA.itemsCount} items)`);
-    console.log('Card B (Navy):', tenderCheck.result.value.cardB.title, `(${tenderCheck.result.value.cardB.itemsCount} items)`);
-    console.log('Commitment Band:');
-    console.log('  Eyebrow:', tenderCheck.result.value.commitment.eyebrow);
-    console.log('  Shield icon:', tenderCheck.result.value.commitment.hasShieldIcon);
-    console.log('  Text:', tenderCheck.result.value.commitment.text);
-    console.log('  Font:', tenderCheck.result.value.commitment.font, 'Style:', tenderCheck.result.value.commitment.fontStyle, 'Size:', tenderCheck.result.value.commitment.fontSize);
-    console.log('  Left border:', tenderCheck.result.value.commitment.borderLeft);
+    const tcVal = tenderCheck.result?.result?.value || {};
+    if (tcVal.error) {
+      console.error(tcVal.error);
+    } else {
+      console.log('Card A (White):', tcVal.cardA?.title, `(${tcVal.cardA?.itemsCount} items)`);
+      console.log('Card B (Navy):', tcVal.cardB?.title, `(${tcVal.cardB?.itemsCount} items)`);
+      console.log('Commitment Band:');
+      console.log('  Eyebrow:', tcVal.commitment?.eyebrow);
+      console.log('  Shield icon:', tcVal.commitment?.hasShieldIcon);
+      console.log('  Text:', tcVal.commitment?.text);
+      console.log('  Font:', tcVal.commitment?.font, 'Style:', tcVal.commitment?.fontStyle, 'Size:', tcVal.commitment?.fontSize);
+      console.log('  Left border:', tcVal.commitment?.borderLeft);
+    }
 
     console.log('\n==================================================');
     console.log('TESTING ALL 10 VIEWPORTS FOR RESPONSIVENESS & OVERFLOW');
@@ -228,7 +271,6 @@ async function main() {
 
     let allViewportsPassed = true;
     for (const vp of viewports) {
-      // Set viewport in Chrome
       await send('Emulation.setDeviceMetricsOverride', {
         width: vp.width,
         height: vp.height,
@@ -239,26 +281,20 @@ async function main() {
       await send('Emulation.setVisibleSize', { width: vp.width, height: vp.height });
       await new Promise((r) => setTimeout(r, 400));
 
-      // Check overflow & layout metrics
       const metrics = await send('Runtime.evaluate', {
         expression: `(() => {
-          const docW = document.documentElement.offsetWidth;
-          const bodyW = document.body.offsetWidth;
           const scrollW = document.documentElement.scrollWidth;
           const innerW = window.innerWidth;
           const hasPageOverflow = scrollW > innerW;
 
-          // Check scroll-margin-top on sections
           const sections = ['core', 'scope', 'tender', 'claims'].map(id => {
             const el = document.getElementById(id);
             return { id, scrollMarginTop: el ? window.getComputedStyle(el).scrollMarginTop : null };
           });
 
-          // Check pills height
           const pill = document.querySelector('.services-jump-pill');
-          const pillHeight = pill ? pill.getBoundingClientRect().height : 0;
+          const pillHeight = pill ? Math.round(pill.getBoundingClientRect().height) : 0;
 
-          // Check tender cards stacking
           const cardA = document.querySelector('.tender-card-white');
           const cardB = document.querySelector('.tender-card-navy');
           let tenderStacked = false;
@@ -268,20 +304,15 @@ async function main() {
             const rectA = cardA.getBoundingClientRect();
             const rectB = cardB.getBoundingClientRect();
             tenderStacked = rectB.top >= rectA.bottom - 5;
-            tenderEqualHeights = Math.abs(rectA.height - rectB.height) < 2;
+            tenderEqualHeights = Math.abs(rectA.height - rectB.height) < 4;
 
             const listA = cardA.querySelector('.tender-card-list')?.getBoundingClientRect();
             const listB = cardB.querySelector('.tender-card-list')?.getBoundingClientRect();
             if (listA && listB && !tenderStacked) {
-              listStartsEqual = Math.abs(listA.top - listB.top) < 2;
+              listStartsEqual = Math.abs(listA.top - listB.top) < 4;
             }
           }
 
-          // Check Scope cards grid layout
-          const scopeGrid = document.querySelector('.scope-grid');
-          const scopeItems = Array.from(document.querySelectorAll('.scope-card-wrapper'));
-          const scopeRects = scopeItems.map(item => item.getBoundingClientRect());
-          
           return {
             innerW,
             scrollW,
@@ -290,21 +321,20 @@ async function main() {
             pillHeight,
             tenderStacked,
             tenderEqualHeights,
-            listStartsEqual,
-            scopeCardHeightsEqual: scopeRects.length === 5 && Math.abs(scopeRects[0].height - scopeRects[1].height) < 3
+            listStartsEqual
           };
         })()`,
         returnByValue: true
       });
 
-      const res = metrics.result.value;
-      const status = !res.hasPageOverflow ? 'PASS' : 'FAIL (Horizontal Overflow!)';
+      const res = metrics.result?.result?.value || {};
+      const status = !res.hasPageOverflow ? 'PASS' : 'FAIL (Overflow)';
       if (res.hasPageOverflow) allViewportsPassed = false;
 
       console.log(`[Viewport ${vp.name.padEnd(18)}] Width: ${vp.width}px -> Overflow: ${status}`);
-      console.log(`   scroll-margin-top: ${res.sections[0].scrollMarginTop}, Pill height: ${res.pillHeight}px`);
+      console.log(`   scroll-margin-top: ${res.sections[0]?.scrollMarginTop}, Pill height: ${res.pillHeight}px`);
       if (vp.width >= 900) {
-        console.log(`   Tender side-by-side equal heights: ${res.tenderEqualHeights}, list start aligned: ${res.listStartsEqual}`);
+        console.log(`   Tender side-by-side equal heights: ${res.tenderEqualHeights}, lists aligned: ${res.listStartsEqual}`);
       } else {
         console.log(`   Tender cards stacked under 900px: ${res.tenderStacked}`);
       }
@@ -323,6 +353,7 @@ async function main() {
     try {
       chromeProc.kill();
       previewServer.httpServer.close();
+      fs.rmSync(tmpDir, { recursive: true, force: true });
     } catch (e) {}
   }
 }

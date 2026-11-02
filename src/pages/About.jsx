@@ -101,8 +101,8 @@ export default function About() {
             </Reveal>
 
             <Reveal className="col-text">
-              <span className="eyebrow-badge">PROFESSIONAL STANDING & GOVERNANCE</span>
-              <h2 className="section-title">Standards you can rely on</h2>
+              <span className="eyebrow-badge">WHY CHOOSE US</span>
+              <h2 className="section-title">Professional Standing & Governance</h2>
               <motion.ul
                 className="governance-list"
                 variants={governanceListVariants}

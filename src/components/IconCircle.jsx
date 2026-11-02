@@ -15,7 +15,8 @@ import {
   Handshake,
   Gavel,
   ClipboardList,
-  ShieldCheck
+  ShieldCheck,
+  GraduationCap
 } from 'lucide-react';
 
 const ICON_MAP = {
@@ -34,7 +35,8 @@ const ICON_MAP = {
   Handshake,
   Gavel,
   ClipboardList,
-  ShieldCheck
+  ShieldCheck,
+  GraduationCap
 };
 
 export default function IconCircle({ name, icon: IconProp, size = 26, strokeWidth = 2.4, className = "" }) {
