@@ -1,7 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Instagram, Linkedin } from 'lucide-react';
 import { BRAND, NAV_LINKS } from '../data/content';
 import { PRIMARY_EMAIL, PHONE_DISPLAY, PHONE_LINK, ADDRESS } from '../config/contact';
+
+const SOCIAL_LINKS = [
+  { name: 'Instagram', href: 'https://www.instagram.com', Icon: Instagram }, // Add Instagram link here
+  { name: 'LinkedIn', href: '', Icon: Linkedin }, // Add LinkedIn link here
+];
 
 export default function Footer() {
   return (
@@ -25,6 +31,33 @@ export default function Footer() {
           </div>
           <div className="footer-practice-badge">{BRAND.practice}</div>
           <p className="footer-tagline">{BRAND.tagline}</p>
+          <div className="footer-social-links" aria-label="Social media">
+            {SOCIAL_LINKS.map(({ name, href, Icon }) => {
+              const icon = <Icon size={20} aria-hidden="true" />;
+
+              return href ? (
+                <a
+                  key={name}
+                  href={href}
+                  className="footer-social-link"
+                  aria-label={name}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {icon}
+                </a>
+              ) : (
+                <span
+                  key={name}
+                  className="footer-social-link"
+                  role="img"
+                  aria-label={`${name} link coming soon`}
+                >
+                  {icon}
+                </span>
+              );
+            })}
+          </div>
         </div>
 
         {/* Column 2: Contact info */}

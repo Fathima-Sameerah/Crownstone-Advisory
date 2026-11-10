@@ -1,9 +1,10 @@
 const { spawn, execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 
 const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
-const outputDir = path.join(__dirname, 'screenshots', 'services-test');
+const outputDir = path.join(os.tmpdir(), 'crownstone-services-test');
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir, { recursive: true });
 }

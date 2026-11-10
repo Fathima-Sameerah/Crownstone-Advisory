@@ -2459,6 +2459,32 @@ h1, h2, h3, h4 {
   line-height: 1.5;
 }
 
+.footer-social-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.footer-social-link {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  color: #CBD5E1;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+a.footer-social-link:hover,
+a.footer-social-link:focus-visible {
+  color: var(--color-navy-dark);
+  border-color: var(--color-gold);
+  background-color: var(--color-gold);
+}
+
 .footer-heading {
   font-family: var(--font-serif);
   font-size: 20px;
@@ -2551,6 +2577,10 @@ h1, h2, h3, h4 {
   }
 
   .footer-brand-header {
+    justify-content: center;
+  }
+
+  .footer-social-links {
     justify-content: center;
   }
 
