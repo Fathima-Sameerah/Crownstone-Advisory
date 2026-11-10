@@ -393,7 +393,7 @@ export default function Careers() {
       setIsSubmitted(true);
     } catch {
       setSubmitError(
-        'Unable to send application automatically. Please retry or email your CV directly to careers@crownstone.com.'
+        `Unable to send application automatically. Please retry or email your CV directly to ${CAREERS_EMAIL}.`
       );
     }
   };

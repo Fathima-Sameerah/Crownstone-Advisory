@@ -235,7 +235,7 @@ export default function Contact() {
      * -------------------------------------------------------------------------
      * Add your Formspree/EmailJS endpoint URL to FORM_ENDPOINT in src/config/contact.js.
      * Add your CRM (HubSpot, Zoho, Zapier, Make) webhook URL to CRM_WEBHOOK in src/config/contact.js.
-     * If both are blank, it triggers the mailto: fallback to ENQUIRY_EMAIL (business@crownstone.com).
+     * If both are blank, it triggers the mailto: fallback to ENQUIRY_EMAIL (business@crownstoneofficial.com).
      * =========================================================================
      */
     if (FORM_ENDPOINT || CRM_WEBHOOK) {
@@ -388,7 +388,7 @@ export default function Contact() {
      * -------------------------------------------------------------------------
      * Add your Formspree/EmailJS endpoint URL to FORM_ENDPOINT in src/config/contact.js.
      * Add your CRM (HubSpot, Zoho, Zapier, Make) webhook URL to CRM_WEBHOOK in src/config/contact.js.
-     * If both are blank, it triggers the mailto: fallback to ENQUIRY_EMAIL (business@crownstone.com).
+     * If both are blank, it triggers the mailto: fallback to ENQUIRY_EMAIL (business@crownstoneofficial.com).
      * =========================================================================
      */
     if (FORM_ENDPOINT || CRM_WEBHOOK) {
@@ -1260,7 +1260,7 @@ export default function Contact() {
                         <div className="email-directory-content">
                           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
                             <span className="email-directory-label">{dept.label}</span>
-                            {dept.email === 'careers@crownstone.com' && (
+                            {dept.email === 'careers@crownstoneofficial.com' && (
                               <Link to="/careers" style={{ fontSize: '13px', color: 'var(--color-dark-gold)', fontWeight: 600 }}>
                                 View Careers &rarr;
                               </Link>
@@ -1270,7 +1270,7 @@ export default function Contact() {
                             <a href={`mailto:${dept.email}`} className="email-directory-email">
                               {dept.email}
                             </a>
-                            {dept.email === 'careers@crownstone.com' && (
+                            {dept.email === 'careers@crownstoneofficial.com' && (
                               <Link to="/careers" style={{ fontSize: '13px', color: 'var(--color-royal-navy)', textDecoration: 'underline' }}>
                                 Careers page
                               </Link>
