@@ -12,7 +12,7 @@ import Banner from '../components/Banner';
 import Reveal from '../components/Reveal';
 import FocusBand from '../components/FocusBand';
 import IconCircle from '../components/IconCircle';
-import { CAREERS_EMAIL, CAREERS_ENDPOINT, MAX_CV_MB } from '../config/careers';
+import { CAREERS_EMAIL, MAX_CV_MB } from '../config/careers';
 
 const POSITIONS = [
   'Junior Quantity Surveyor (QS)',
@@ -92,6 +92,7 @@ export default function Careers() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [isDragging, setIsDragging] = useState(false);
+  const iframeSubmissionPendingRef = useRef(false);
 
   // Field Refs for Auto-Focus on Validation Error
   const nameRef = useRef(null);
@@ -240,7 +241,18 @@ export default function Careers() {
     setIsDragging(false);
     const file = e.dataTransfer.files && e.dataTransfer.files[0];
     if (file) {
-      handleFileSelect(file);
+      const fileInput = fileInputRef.current;
+      try {
+        if (!fileInput) throw new Error('CV file input is unavailable.');
+        fileInput.files = e.dataTransfer.files;
+        if (!fileInput.files.length) throw new Error('Dropped file could not be attached.');
+        handleFileSelect(fileInput.files[0]);
+      } catch {
+        setErrors((prev) => ({
+          ...prev,
+          cv: 'Unable to attach the dropped file. Please click to browse and select your CV.'
+        }));
+      }
     }
   };
 
@@ -253,7 +265,7 @@ export default function Careers() {
   };
 
   // Submit Handler
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setSubmitError('');
 
@@ -317,84 +329,72 @@ export default function Careers() {
         : `${formData.currentSalaryCurrency} ${formData.currentSalaryAmount} ${periodLabel}`;
     const formattedExpectedSalary = `${formData.expectedSalaryCurrency} ${formData.expectedSalaryAmount} ${periodLabel}`;
 
-    const submissionData = new FormData();
-    submissionData.append('name', formData.name.trim());
-    submissionData.append('email', formData.email.trim());
-    submissionData.append('position', formData.position);
-    submissionData.append('current_salary', formattedCurrentSalary);
-    submissionData.append('expected_salary', formattedExpectedSalary);
-    submissionData.append('notice_period', formData.noticePeriod);
-    submissionData.append('_subject', `Application: ${formData.position} - ${formData.name.trim()}`);
-    submissionData.append('_template', 'table');
-    submissionData.append('_captcha', 'false');
-    submissionData.append('_honey', '');
-
-    if (cvFile) {
-      submissionData.append('attachment', cvFile);
-    }
-
     try {
-      const response = await fetch(CAREERS_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json'
-        },
-        body: submissionData
-      });
-
-      if (response.ok) {
-        setIsSubmitted(true);
-      } else {
-        // Fallback via iframe form submission or mailto
-        triggerHiddenIframeFallback(formattedCurrentSalary, formattedExpectedSalary);
-      }
-    } catch (err) {
-      // Network/CORS fallback
-      triggerHiddenIframeFallback(formattedCurrentSalary, formattedExpectedSalary);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const triggerHiddenIframeFallback = (currentSal, expectedSal) => {
-    try {
-      const form = document.createElement('form');
-      form.action = `https://formsubmit.co/${CAREERS_EMAIL}`;
-      form.method = 'POST';
-      form.enctype = 'multipart/form-data';
-      form.target = 'careers_formsubmit_iframe';
-      form.style.display = 'none';
-
-      const fields = {
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        position: formData.position,
-        current_salary: currentSal,
-        expected_salary: expectedSal,
-        notice_period: formData.noticePeriod,
-        _subject: `Application: ${formData.position} - ${formData.name.trim()}`,
-        _template: 'table',
-        _captcha: 'false',
-        _honey: ''
-      };
-
-      Object.entries(fields).forEach(([k, v]) => {
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = k;
-        input.value = v;
-        form.appendChild(input);
-      });
-
-      document.body.appendChild(form);
-      form.submit();
-      document.body.removeChild(form);
-
-      setIsSubmitted(true);
+      submitWithHiddenIframe(formattedCurrentSalary, formattedExpectedSalary);
     } catch {
+      setIsSubmitting(false);
       setSubmitError(
         `Unable to send application automatically. Please retry or email your CV directly to ${CAREERS_EMAIL}.`
       );
+    }
+  };
+
+  const handleSubmissionFrameLoad = () => {
+    if (iframeSubmissionPendingRef.current) {
+      iframeSubmissionPendingRef.current = false;
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+    }
+  };
+
+  const submitWithHiddenIframe = (currentSal, expectedSal) => {
+    const form = document.createElement('form');
+    const formId = `careers-formsubmit-${Date.now()}`;
+    form.id = formId;
+    form.action = `https://formsubmit.co/${CAREERS_EMAIL}`;
+    form.method = 'POST';
+    form.enctype = 'multipart/form-data';
+    form.target = 'careers_formsubmit_iframe';
+    form.style.display = 'none';
+
+    const fields = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      position: formData.position,
+      current_salary: currentSal,
+      expected_salary: expectedSal,
+      notice_period: formData.noticePeriod,
+      _subject: `Application: ${formData.position} - ${formData.name.trim()}`,
+      _template: 'table',
+      _captcha: 'false',
+      _honey: ''
+    };
+
+    Object.entries(fields).forEach(([name, value]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    });
+
+    const fileInput = fileInputRef.current;
+    if (!fileInput || !cvFile) {
+      throw new Error('The selected CV is no longer available.');
+    }
+
+    fileInput.setAttribute('form', formId);
+    document.body.appendChild(form);
+    iframeSubmissionPendingRef.current = true;
+
+    try {
+      form.submit();
+    } catch (error) {
+      iframeSubmissionPendingRef.current = false;
+      throw error;
+    } finally {
+      fileInput.removeAttribute('form');
+      form.remove();
     }
   };
 
@@ -433,6 +433,7 @@ export default function Careers() {
         id="careers_formsubmit_iframe"
         style={{ display: 'none' }}
         title="Form Submission Target"
+        onLoad={handleSubmissionFrameLoad}
       />
 
       {/* a) Banner */}
@@ -859,6 +860,7 @@ export default function Careers() {
                           ref={fileInputRef}
                           id="careers-cv-file"
                           type="file"
+                          name="attachment"
                           accept=".pdf,.doc,.docx"
                           style={{ display: 'none' }}
                           onChange={handleFileInputChange}

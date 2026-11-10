@@ -21,9 +21,7 @@ import {
   PHONE_LINK,
   ADDRESS,
   DEPARTMENTS,
-  ENQUIRY_EMAIL,
   FORM_ENDPOINT,
-  CRM_WEBHOOK,
   CONSULT_MINUTES,
   SERVICES,
   UK_CONTACT
@@ -36,6 +34,26 @@ const TIMEZONES = [
 ];
 
 const TIME_SLOTS = ['9:00 AM', '10:30 AM', '1:00 PM', '3:30 PM'];
+
+async function submitToBusinessEmail(fields) {
+  const response = await fetch(FORM_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      ...fields,
+      _captcha: 'false',
+      _template: 'table'
+    })
+  });
+  const result = await response.json();
+
+  if (!response.ok || String(result.success).toLowerCase() !== 'true') {
+    throw new Error(result.message || 'FormSubmit could not send the form.');
+  }
+}
 
 // Helper to generate the next 10 business days (skipping Sat & Sun)
 function getWorkingDays(count = 10) {
@@ -217,73 +235,25 @@ export default function Contact() {
     setEnquirySubmitting(true);
     setEnquiryErrorMsg('');
 
-    const payload = {
-      type: 'enquiry',
-      name: enquiry.name.trim(),
-      email: enquiry.email.trim(),
-      whatsapp: enquiry.whatsapp.trim(),
-      company: enquiry.company.trim(),
-      service: enquiry.service,
-      message: enquiry.message.trim(),
-      page: 'contact',
-      submittedAt: new Date().toISOString()
-    };
-
-    /**
-     * =========================================================================
-     * ENQUIRY FORM SUBMISSION CONFIGURATION:
-     * -------------------------------------------------------------------------
-     * Add your Formspree/EmailJS endpoint URL to FORM_ENDPOINT in src/config/contact.js.
-     * Add your CRM (HubSpot, Zoho, Zapier, Make) webhook URL to CRM_WEBHOOK in src/config/contact.js.
-     * If both are blank, it triggers the mailto: fallback to ENQUIRY_EMAIL (business@crownstoneofficial.com).
-     * =========================================================================
-     */
-    if (FORM_ENDPOINT || CRM_WEBHOOK) {
-      try {
-        const calls = [];
-        if (FORM_ENDPOINT) {
-          calls.push(
-            fetch(FORM_ENDPOINT, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-              body: JSON.stringify(payload)
-            })
-          );
-        }
-        if (CRM_WEBHOOK) {
-          calls.push(
-            fetch(CRM_WEBHOOK, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload)
-            })
-          );
-        }
-        await Promise.all(calls);
-        setEnquirySubmitted(true);
-      } catch (err) {
-        setEnquiryErrorMsg('Unable to submit enquiry at this time. Please retry or contact us directly.');
-      } finally {
-        setEnquirySubmitting(false);
-      }
-    } else {
-      // Fallback: mailto link
-      const subject = encodeURIComponent(`Website enquiry - ${enquiry.service} from ${enquiry.name}`);
-      const body = encodeURIComponent(
-        `WEBSITE ENQUIRY DETAILS:\n\n` +
-        `Full Name: ${enquiry.name}\n` +
-        `Email: ${enquiry.email}\n` +
-        `WhatsApp: ${enquiry.whatsapp}\n` +
-        `Company: ${enquiry.company}\n` +
-        `Required Service: ${enquiry.service}\n\n` +
-        `Message:\n${enquiry.message || 'N/A'}\n\n` +
-        `Submitted: ${new Date().toLocaleString()}`
-      );
-      window.location.href = `mailto:${ENQUIRY_EMAIL}?subject=${subject}&body=${body}`;
-      setTimeout(() => {
-        setEnquirySubmitting(false);
-        setEnquirySubmitted(true);
-      }, 500);
+    try {
+      await submitToBusinessEmail({
+        type: 'Website enquiry',
+        name: enquiry.name.trim(),
+        email: enquiry.email.trim(),
+        _replyto: enquiry.email.trim(),
+        whatsapp: enquiry.whatsapp.trim(),
+        company: enquiry.company.trim(),
+        service: enquiry.service,
+        message: enquiry.message.trim() || 'Not provided',
+        submitted_at: new Date().toLocaleString(),
+        _subject: `Website enquiry - ${enquiry.service} from ${enquiry.name.trim()}`,
+        _honey: enquiry._honeypot
+      });
+      setEnquirySubmitted(true);
+    } catch {
+      setEnquiryErrorMsg('Unable to submit enquiry at this time. Please retry or contact us directly.');
+    } finally {
+      setEnquirySubmitting(false);
     }
   };
 
@@ -368,78 +338,27 @@ export default function Contact() {
     setConsultSubmitting(true);
     setConsultErrorMsg('');
 
-    const payload = {
-      type: 'consultation',
-      name: consultData.name.trim(),
-      email: consultData.email.trim(),
-      whatsapp: consultData.whatsapp.trim(),
-      company: consultData.company.trim() || 'Not specified',
-      date: consultData.dateObj.fullDate,
-      time: consultData.time,
-      timezone: consultData.timezone,
-      duration: CONSULT_MINUTES,
-      page: 'contact',
-      submittedAt: new Date().toISOString()
-    };
-
-    /**
-     * =========================================================================
-     * CONSULTATION BOOKING SUBMISSION CONFIGURATION:
-     * -------------------------------------------------------------------------
-     * Add your Formspree/EmailJS endpoint URL to FORM_ENDPOINT in src/config/contact.js.
-     * Add your CRM (HubSpot, Zoho, Zapier, Make) webhook URL to CRM_WEBHOOK in src/config/contact.js.
-     * If both are blank, it triggers the mailto: fallback to ENQUIRY_EMAIL (business@crownstoneofficial.com).
-     * =========================================================================
-     */
-    if (FORM_ENDPOINT || CRM_WEBHOOK) {
-      try {
-        const calls = [];
-        if (FORM_ENDPOINT) {
-          calls.push(
-            fetch(FORM_ENDPOINT, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-              body: JSON.stringify(payload)
-            })
-          );
-        }
-        if (CRM_WEBHOOK) {
-          calls.push(
-            fetch(CRM_WEBHOOK, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(payload)
-            })
-          );
-        }
-        await Promise.all(calls);
-        setConsultSubmitted(true);
-      } catch (err) {
-        setConsultErrorMsg('Unable to confirm booking at this time. Please retry or contact us directly.');
-      } finally {
-        setConsultSubmitting(false);
-      }
-    } else {
-      // Fallback: mailto link
-      const subject = encodeURIComponent(
-        `Consultation Booking - ${consultData.name} (${consultData.dateObj.fullDate} at ${consultData.time})`
-      );
-      const body = encodeURIComponent(
-        `FREE 15-MINUTE INTRODUCTORY CONSULTATION:\n\n` +
-        `Full Name: ${consultData.name}\n` +
-        `Email: ${consultData.email}\n` +
-        `WhatsApp: ${consultData.whatsapp}\n` +
-        `Company: ${consultData.company || 'Not provided'}\n\n` +
-        `Requested Date: ${consultData.dateObj.fullDate}\n` +
-        `Time: ${consultData.time} (${consultData.timezone})\n` +
-        `Duration: ${CONSULT_MINUTES} minutes\n\n` +
-        `Submitted: ${new Date().toLocaleString()}`
-      );
-      window.location.href = `mailto:${ENQUIRY_EMAIL}?subject=${subject}&body=${body}`;
-      setTimeout(() => {
-        setConsultSubmitting(false);
-        setConsultSubmitted(true);
-      }, 500);
+    try {
+      await submitToBusinessEmail({
+        type: 'Free consultation booking',
+        name: consultData.name.trim(),
+        email: consultData.email.trim(),
+        _replyto: consultData.email.trim(),
+        whatsapp: consultData.whatsapp.trim(),
+        company: consultData.company.trim() || 'Not provided',
+        requested_date: consultData.dateObj.fullDate,
+        requested_time: consultData.time,
+        timezone: consultData.timezone,
+        duration_minutes: CONSULT_MINUTES,
+        submitted_at: new Date().toLocaleString(),
+        _subject: `Consultation booking - ${consultData.name.trim()} (${consultData.dateObj.fullDate} at ${consultData.time})`,
+        _honey: consultData._honeypot
+      });
+      setConsultSubmitted(true);
+    } catch {
+      setConsultErrorMsg('Unable to confirm booking at this time. Please retry or contact us directly.');
+    } finally {
+      setConsultSubmitting(false);
     }
   };
 
@@ -753,7 +672,7 @@ export default function Contact() {
                     </button>
 
                     <p className="form-footer-note">
-                      Your enquiry goes straight to our business team and is logged in our CRM.
+                      Your enquiry goes straight to our business team.
                     </p>
                   </form>
                 )}
@@ -797,7 +716,7 @@ export default function Contact() {
                       </div>
                     </div>
                     <p className="success-msg">
-                      You will receive a confirmation by email and WhatsApp.
+                      Our team will contact you by email or WhatsApp to confirm your consultation.
                     </p>
                     <button
                       type="button"
@@ -1141,7 +1060,7 @@ export default function Contact() {
                             </div>
 
                             <p className="form-footer-note">
-                              You will receive a confirmation by email and WhatsApp.
+                              Our team will contact you by email or WhatsApp to confirm your consultation.
                             </p>
                           </div>
                         </motion.div>

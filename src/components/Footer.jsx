@@ -5,7 +5,7 @@ import { BRAND, NAV_LINKS } from '../data/content';
 import { PRIMARY_EMAIL, PHONE_DISPLAY, PHONE_LINK, ADDRESS } from '../config/contact';
 
 const SOCIAL_LINKS = [
-  { name: 'Instagram', href: 'https://www.instagram.com', Icon: Instagram }, // Add Instagram link here
+  { name: 'Instagram', href: '', Icon: Instagram }, // Add Instagram link here
   { name: 'LinkedIn', href: '', Icon: Linkedin }, // Add LinkedIn link here
 ];
 

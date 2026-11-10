@@ -5,8 +5,7 @@ export const PHONE_LINK = "+94777788812";
 export const ADDRESS = "No 103, Kudugala Road, Wattegama, Kandy, Sri Lanka";
 
 export const ENQUIRY_EMAIL = "business@crownstoneofficial.com"; // business email that receives enquiries and bookings
-export const FORM_ENDPOINT = ""; // paste Formspree/EmailJS URL here
-export const CRM_WEBHOOK = ""; // paste CRM webhook URL here (HubSpot / Zoho / Zapier / Make)
+export const FORM_ENDPOINT = `https://formsubmit.co/ajax/${ENQUIRY_EMAIL}`;
 export const CONSULT_MINUTES = 15;
 
 export const SERVICES = [
