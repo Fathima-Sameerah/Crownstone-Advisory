@@ -3323,11 +3323,17 @@ a.footer-social-link:focus-visible {
   .careers-form-card {
     padding: 24px 20px;
   }
+
+  .salary-toggle-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
 }
 
 .careers-form-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 20px;
 }
 
@@ -3344,6 +3350,7 @@ a.footer-social-link:focus-visible {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-width: 0;
 }
 
 .form-label {
@@ -3363,6 +3370,8 @@ a.footer-social-link:focus-visible {
 .form-input,
 .form-select {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   height: 48px;
   min-height: 48px;
   padding: 0 16px;
@@ -3409,6 +3418,7 @@ a.footer-social-link:focus-visible {
   display: flex;
   align-items: stretch;
   width: 100%;
+  min-width: 0;
 }
 
 .salary-currency-select {
@@ -3436,6 +3446,7 @@ a.footer-social-link:focus-visible {
 .salary-amount-input {
   flex: 1;
   min-width: 0;
+  max-width: 100%;
   height: 48px;
   min-height: 48px;
   padding: 0 16px;
