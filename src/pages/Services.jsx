@@ -155,7 +155,7 @@ export default function Services() {
   return (
     <div className="page-wrapper services-page">
       <SEO
-        title="Our Services | Scope of Services, Pre-Contract Advisory & Tender Management"
+        title="Our Services | Quantity Surveying & Claims Advisory | Crownstone Advisory"
         description="Crownstone Advisory provides comprehensive Quantity Surveying, Pre-Contract Advisory & Tender Management, full Scope of Services, and specialist Claims & Dispute Advisory."
       />
 

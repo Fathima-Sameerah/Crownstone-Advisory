@@ -28,7 +28,7 @@ export default function Home() {
   return (
     <div className="page-wrapper home-page">
       <SEO
-        title="Crownstone Advisory"
+        title="Crownstone Advisory | Chartered Quantity Surveyors & Cost Consultants | Sri Lanka & GCC"
         description="Crownstone Advisory provides independent quantity surveying, commercial management, and claims advisory services across Sri Lanka & the GCC."
       />
 

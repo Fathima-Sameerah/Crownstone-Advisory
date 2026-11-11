@@ -423,7 +423,7 @@ export default function Careers() {
   return (
     <div className="page-wrapper careers-page">
       <SEO
-        title="Careers | Crownstone Advisory"
+        title="Careers | Quantity Surveying Jobs | Crownstone Advisory"
         description="Join Crownstone Advisory. Explore open positions for Junior Quantity Surveyor and Graduate Internship in our Sri Lanka and GCC practice."
       />
 

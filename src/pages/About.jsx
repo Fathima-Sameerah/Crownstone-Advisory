@@ -31,7 +31,7 @@ export default function About() {
   return (
     <div className="page-wrapper about-page">
       <SEO
-        title="About Us"
+        title="About Us | Crownstone Advisory"
         description="Learn about Crownstone Advisory, led by a Chartered Quantity Surveyor (MRICS) providing standards you can rely on across Sri Lanka and GCC."
       />
 

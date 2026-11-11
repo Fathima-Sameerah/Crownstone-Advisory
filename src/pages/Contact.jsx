@@ -399,7 +399,7 @@ export default function Contact() {
   return (
     <div className="page-wrapper contact-page">
       <SEO
-        title="Contact Us"
+        title="Contact Crownstone Advisory | Sri Lanka & GCC"
         description="Get in touch with Crownstone Advisory for expert Quantity Surveying, Contract & Commercial Management, and Claims Advisory in Sri Lanka, the GCC, and the UK."
       />
 

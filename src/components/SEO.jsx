@@ -1,25 +1,34 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { BRAND } from '../data/content';
+import { useLocation } from 'react-router-dom';
+
+const SITE_URL = 'https://crownstoneofficial.com';
+const SOCIAL_IMAGE = `${SITE_URL}/assets/logo.png`;
 
 export default function SEO({
   title,
   description = "Crownstone Advisory is a professional consultancy providing commercial, contractual, and claims advisory services, led by a Chartered Quantity Surveyor (MRICS).",
-  canonical = ""
+  canonical
 }) {
-  const fullTitle = title
-    ? `${title} | Crownstone Advisory`
-    : `Crownstone Advisory | Chartered Quantity Surveyors & Cost Consultants`;
+  const { pathname } = useLocation();
+  const canonicalUrl = canonical || `${SITE_URL}${pathname === '/' ? '/' : pathname.replace(/\/+$/, '')}`;
 
   return (
     <Helmet>
-      <title>{fullTitle}</title>
+      <title>{title}</title>
       <meta name="description" content={description} />
-      <meta property="og:title" content={fullTitle} />
+      <link rel="canonical" href={canonicalUrl} />
+      <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:type" content="website" />
-      <meta property="og:image" content={`${import.meta.env.BASE_URL}assets/logo.png`} />
-      {canonical && <link rel="canonical" href={canonical} />}
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:site_name" content="Crownstone Advisory" />
+      <meta property="og:image" content={SOCIAL_IMAGE} />
+      <meta property="og:image:alt" content="Crownstone Advisory logo" />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:title" content={title} />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={SOCIAL_IMAGE} />
     </Helmet>
   );
 }
